@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Cloud, Calendar, Map, ChartBarIcon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -22,6 +22,26 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
+    {
+        title: 'DriveCloud',
+        href: '/main',
+        icon: Cloud,
+    },
+    {
+        title: 'Schedule',
+        href: '/schedule',
+        icon: Calendar,
+    },
+    {
+        title: 'Map',
+        href: '/map',
+        icon: Map,
+    },
+    {
+        title: 'Charts',
+        href: '/charts',
+        icon: ChartBarIcon,
+    }
 ];
 
 const footerNavItems: NavItem[] = [

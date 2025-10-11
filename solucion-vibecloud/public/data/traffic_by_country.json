@@ -1,0 +1,222 @@
+[
+  {
+    "country": "PHL",
+    "average_delay": 2.1108
+  },
+  {
+    "country": "ROU",
+    "average_delay": 1.9187
+  },
+  {
+    "country": "TWN",
+    "average_delay": 1.5734
+  },
+  {
+    "country": "MEX",
+    "average_delay": 1.5467
+  },
+  {
+    "country": "GRC",
+    "average_delay": 1.4188
+  },
+  {
+    "country": "LTU",
+    "average_delay": 1.3445
+  },
+  {
+    "country": "BGR",
+    "average_delay": 1.3421
+  },
+  {
+    "country": "PER",
+    "average_delay": 1.2758
+  },
+  {
+    "country": "IRL",
+    "average_delay": 1.209
+  },
+  {
+    "country": "COL",
+    "average_delay": 1.1658
+  },
+  {
+    "country": "IDN",
+    "average_delay": 1.1021
+  },
+  {
+    "country": "IND",
+    "average_delay": 1.043
+  },
+  {
+    "country": "TUR",
+    "average_delay": 0.9988
+  },
+  {
+    "country": "LUX",
+    "average_delay": 0.9789
+  },
+  {
+    "country": "HUN",
+    "average_delay": 0.9364
+  },
+  {
+    "country": "GBR",
+    "average_delay": 0.93
+  },
+  {
+    "country": "CAN",
+    "average_delay": 0.7987
+  },
+  {
+    "country": "POL",
+    "average_delay": 0.7845
+  },
+  {
+    "country": "CHE",
+    "average_delay": 0.7361
+  },
+  {
+    "country": "DEU",
+    "average_delay": 0.6933
+  },
+  {
+    "country": "PRT",
+    "average_delay": 0.69
+  },
+  {
+    "country": "ITA",
+    "average_delay": 0.6783
+  },
+  {
+    "country": "LVA",
+    "average_delay": 0.6669
+  },
+  {
+    "country": "AUT",
+    "average_delay": 0.6643
+  },
+  {
+    "country": "SVK",
+    "average_delay": 0.6439
+  },
+  {
+    "country": "ESP",
+    "average_delay": 0.6429
+  },
+  {
+    "country": "EST",
+    "average_delay": 0.6425
+  },
+  {
+    "country": "SVN",
+    "average_delay": 0.6242
+  },
+  {
+    "country": "ISL",
+    "average_delay": 0.6103
+  },
+  {
+    "country": "FRA",
+    "average_delay": 0.6094
+  },
+  {
+    "country": "BEL",
+    "average_delay": 0.5912
+  },
+  {
+    "country": "ZAF",
+    "average_delay": 0.5763
+  },
+  {
+    "country": "AUS",
+    "average_delay": 0.5315
+  },
+  {
+    "country": "CHL",
+    "average_delay": 0.5042
+  },
+  {
+    "country": "CZE",
+    "average_delay": 0.4892
+  },
+  {
+    "country": "THA",
+    "average_delay": 0.4883
+  },
+  {
+    "country": "NZL",
+    "average_delay": 0.4863
+  },
+  {
+    "country": "ARE",
+    "average_delay": 0.4369
+  },
+  {
+    "country": "NLD",
+    "average_delay": 0.4236
+  },
+  {
+    "country": "DNK",
+    "average_delay": 0.4209
+  },
+  {
+    "country": "SWE",
+    "average_delay": 0.4193
+  },
+  {
+    "country": "KWT",
+    "average_delay": 0.4128
+  },
+  {
+    "country": "JPN",
+    "average_delay": 0.4046
+  },
+  {
+    "country": "FIN",
+    "average_delay": 0.3776
+  },
+  {
+    "country": "USA",
+    "average_delay": 0.3769
+  },
+  {
+    "country": "QAT",
+    "average_delay": 0.3653
+  },
+  {
+    "country": "NOR",
+    "average_delay": 0.3459
+  },
+  {
+    "country": "ARG",
+    "average_delay": 0.2592
+  },
+  {
+    "country": "SAU",
+    "average_delay": 0.2553
+  },
+  {
+    "country": "MYS",
+    "average_delay": 0.2539
+  },
+  {
+    "country": "URY",
+    "average_delay": 0.2385
+  },
+  {
+    "country": "BRA",
+    "average_delay": 0.1806
+  },
+  {
+    "country": "HKG",
+    "average_delay": -0.0643
+  },
+  {
+    "country": "SGP",
+    "average_delay": -0.1286
+  },
+  {
+    "country": "EGY",
+    "average_delay": -0.1963
+  }
+]

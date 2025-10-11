@@ -1,0 +1,92 @@
+[
+    {
+        "lat": 40.7128,
+        "lon": -74.0060,
+        "name": "New York City",
+        "value": 95.5
+    },
+    {
+        "lat": 40.7589,
+        "lon": -73.9851,
+        "name": "Times Square",
+        "value": 87.3
+    },
+    {
+        "lat": 40.7614,
+        "lon": -73.9776,
+        "name": "Central Park South",
+        "value": 92.1
+    },
+    {
+        "lat": 40.7484,
+        "lon": -73.9857,
+        "name": "Empire State Building",
+        "value": 88.9
+    },
+    {
+        "lat": 40.7580,
+        "lon": -73.9855,
+        "name": "Rockefeller Center",
+        "value": 91.2
+    },
+    {
+        "lat": 40.7061,
+        "lon": -74.0087,
+        "name": "Wall Street",
+        "value": 85.6
+    },
+    {
+        "lat": 40.7527,
+        "lon": -73.9772,
+        "name": "Grand Central Terminal",
+        "value": 89.4
+    },
+    {
+        "lat": 40.7829,
+        "lon": -73.9654,
+        "name": "Upper East Side",
+        "value": 78.2
+    },
+    {
+        "lat": 40.7489,
+        "lon": -73.9680,
+        "name": "United Nations",
+        "value": 82.7
+    },
+    {
+        "lat": 40.7411,
+        "lon": -73.9897,
+        "name": "Madison Square Garden",
+        "value": 93.5
+    },
+    {
+        "lat": 40.7282,
+        "lon": -73.7949,
+        "name": "Queens",
+        "value": 76.8
+    },
+    {
+        "lat": 40.6782,
+        "lon": -73.9442,
+        "name": "Brooklyn",
+        "value": 81.3
+    },
+    {
+        "lat": 40.8448,
+        "lon": -73.8648,
+        "name": "Bronx",
+        "value": 72.9
+    },
+    {
+        "lat": 40.5795,
+        "lon": -74.1502,
+        "name": "Staten Island",
+        "value": 69.4
+    },
+    {
+        "lat": 40.7614,
+        "lon": -73.9776,
+        "name": "Museum of Modern Art",
+        "value": 86.7
+    }
+]

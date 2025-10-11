@@ -1,0 +1,27 @@
+[
+  {
+    "country": "USA",
+    "city": "los-angeles",
+    "average_delay": 7.5333
+  },
+  {
+    "country": "USA",
+    "city": "new-york",
+    "average_delay": 5.0
+  },
+  {
+    "country": "GBR",
+    "city": "london",
+    "average_delay": 4.8333
+  },
+  {
+    "country": "JPN",
+    "city": "tokyo",
+    "average_delay": 2.3
+  },
+  {
+    "country": "ARE",
+    "city": "abu-dhabi",
+    "average_delay": 0.2412
+  }
+]

@@ -1,0 +1,387 @@
+[
+  {
+    "country": "PHL",
+    "country_name": "Philippines",
+    "lat": 12.750349,
+    "lon": 122.73121,
+    "average_delay": 2.1108
+  },
+  {
+    "country": "ROU",
+    "country_name": "Romania",
+    "lat": 45.985213,
+    "lon": 24.685923,
+    "average_delay": 1.9187
+  },
+  {
+    "country": "TWN",
+    "country_name": "Taiwan",
+    "lat": 23.973937,
+    "lon": 120.982018,
+    "average_delay": 1.5734
+  },
+  {
+    "country": "MEX",
+    "country_name": "Mexico",
+    "lat": 23.658512,
+    "lon": -102.00771,
+    "average_delay": 1.5467
+  },
+  {
+    "country": "GRC",
+    "country_name": "Greece",
+    "lat": 38.995368,
+    "lon": 21.987713,
+    "average_delay": 1.4188
+  },
+  {
+    "country": "LTU",
+    "country_name": "Lithuania",
+    "lat": 55.35,
+    "lon": 23.75,
+    "average_delay": 1.3445
+  },
+  {
+    "country": "BGR",
+    "country_name": "Bulgaria",
+    "lat": 42.607397,
+    "lon": 25.485662,
+    "average_delay": 1.3421
+  },
+  {
+    "country": "PER",
+    "country_name": "Peru",
+    "lat": -6.86997,
+    "lon": -75.045851,
+    "average_delay": 1.2758
+  },
+  {
+    "country": "IRL",
+    "country_name": "Ireland",
+    "lat": 52.865196,
+    "lon": -7.97946,
+    "average_delay": 1.209
+  },
+  {
+    "country": "COL",
+    "country_name": "Colombia",
+    "lat": 4.099917,
+    "lon": -72.908813,
+    "average_delay": 1.1658
+  },
+  {
+    "country": "IDN",
+    "country_name": "Indonesia",
+    "lat": -2.483383,
+    "lon": 117.890285,
+    "average_delay": 1.1021
+  },
+  {
+    "country": "IND",
+    "country_name": "India",
+    "lat": 22.351115,
+    "lon": 78.667743,
+    "average_delay": 1.043
+  },
+  {
+    "country": "TUR",
+    "country_name": "Turkey",
+    "lat": 39.294076,
+    "lon": 35.231663,
+    "average_delay": 0.9988
+  },
+  {
+    "country": "LUX",
+    "country_name": "Luxembourg",
+    "lat": 49.815868,
+    "lon": 6.129675,
+    "average_delay": 0.9789
+  },
+  {
+    "country": "HUN",
+    "country_name": "Hungary",
+    "lat": 47.181759,
+    "lon": 19.506094,
+    "average_delay": 0.9364
+  },
+  {
+    "country": "GBR",
+    "country_name": "United Kingdom",
+    "lat": 54.702354,
+    "lon": -3.276575,
+    "average_delay": 0.93
+  },
+  {
+    "country": "CAN",
+    "country_name": "Canada",
+    "lat": 61.066692,
+    "lon": -107.991707,
+    "average_delay": 0.7987
+  },
+  {
+    "country": "POL",
+    "country_name": "Poland",
+    "lat": 52.215933,
+    "lon": 19.134422,
+    "average_delay": 0.7845
+  },
+  {
+    "country": "CHE",
+    "country_name": "Switzerland",
+    "lat": 46.798562,
+    "lon": 8.231974,
+    "average_delay": 0.7361
+  },
+  {
+    "country": "DEU",
+    "country_name": "Germany",
+    "lat": 51.163818,
+    "lon": 10.447831,
+    "average_delay": 0.6933
+  },
+  {
+    "country": "PRT",
+    "country_name": "Portugal",
+    "lat": 39.662165,
+    "lon": -8.135352,
+    "average_delay": 0.69
+  },
+  {
+    "country": "ITA",
+    "country_name": "Italy",
+    "lat": 42.638426,
+    "lon": 12.674297,
+    "average_delay": 0.6783
+  },
+  {
+    "country": "LVA",
+    "country_name": "Latvia",
+    "lat": 56.840649,
+    "lon": 24.753764,
+    "average_delay": 0.6669
+  },
+  {
+    "country": "AUT",
+    "country_name": "Austria",
+    "lat": 47.59397,
+    "lon": 14.12456,
+    "average_delay": 0.6643
+  },
+  {
+    "country": "SVK",
+    "country_name": "Slovakia",
+    "lat": 48.741152,
+    "lon": 19.452865,
+    "average_delay": 0.6439
+  },
+  {
+    "country": "ESP",
+    "country_name": "Spain",
+    "lat": 39.326068,
+    "lon": -4.837979,
+    "average_delay": 0.6429
+  },
+  {
+    "country": "EST",
+    "country_name": "Estonia",
+    "lat": 58.752378,
+    "lon": 25.331908,
+    "average_delay": 0.6425
+  },
+  {
+    "country": "SVN",
+    "country_name": "Slovenia",
+    "lat": 46.119944,
+    "lon": 14.815333,
+    "average_delay": 0.6242
+  },
+  {
+    "country": "ISL",
+    "country_name": "Iceland",
+    "lat": 64.984182,
+    "lon": -18.105901,
+    "average_delay": 0.6103
+  },
+  {
+    "country": "FRA",
+    "country_name": "France",
+    "lat": 46.603354,
+    "lon": 1.888334,
+    "average_delay": 0.6094
+  },
+  {
+    "country": "BEL",
+    "country_name": "Belgium",
+    "lat": 50.640281,
+    "lon": 4.666715,
+    "average_delay": 0.5912
+  },
+  {
+    "country": "ZAF",
+    "country_name": "South Africa",
+    "lat": -28.816624,
+    "lon": 24.991639,
+    "average_delay": 0.5763
+  },
+  {
+    "country": "AUS",
+    "country_name": "Australia",
+    "lat": -24.776109,
+    "lon": 134.755,
+    "average_delay": 0.5315
+  },
+  {
+    "country": "CHL",
+    "country_name": "Chile",
+    "lat": -31.761336,
+    "lon": -71.31877,
+    "average_delay": 0.5042
+  },
+  {
+    "country": "CZE",
+    "country_name": "Czech Republic",
+    "lat": 49.743905,
+    "lon": 15.338106,
+    "average_delay": 0.4892
+  },
+  {
+    "country": "THA",
+    "country_name": "Thailand",
+    "lat": 14.897192,
+    "lon": 100.83273,
+    "average_delay": 0.4883
+  },
+  {
+    "country": "NZL",
+    "country_name": "New Zealand",
+    "lat": -41.500083,
+    "lon": 172.834408,
+    "average_delay": 0.4863
+  },
+  {
+    "country": "ARE",
+    "country_name": "United Arab Emirates",
+    "lat": 24.000249,
+    "lon": 53.999483,
+    "average_delay": 0.4369
+  },
+  {
+    "country": "NLD",
+    "country_name": "Netherlands",
+    "lat": 52.243498,
+    "lon": 5.634323,
+    "average_delay": 0.4236
+  },
+  {
+    "country": "DNK",
+    "country_name": "Denmark",
+    "lat": 55.670249,
+    "lon": 10.333328,
+    "average_delay": 0.4209
+  },
+  {
+    "country": "SWE",
+    "country_name": "Sweden",
+    "lat": 59.674971,
+    "lon": 14.520858,
+    "average_delay": 0.4193
+  },
+  {
+    "country": "KWT",
+    "country_name": "Kuwait",
+    "lat": 29.273396,
+    "lon": 47.497948,
+    "average_delay": 0.4128
+  },
+  {
+    "country": "JPN",
+    "country_name": "Japan",
+    "lat": 36.574844,
+    "lon": 139.239418,
+    "average_delay": 0.4046
+  },
+  {
+    "country": "FIN",
+    "country_name": "Finland",
+    "lat": 63.246778,
+    "lon": 25.920916,
+    "average_delay": 0.3776
+  },
+  {
+    "country": "USA",
+    "country_name": "United States",
+    "lat": 39.78373,
+    "lon": -100.445882,
+    "average_delay": 0.3769
+  },
+  {
+    "country": "QAT",
+    "country_name": "Qatar",
+    "lat": 25.333698,
+    "lon": 51.229529,
+    "average_delay": 0.3653
+  },
+  {
+    "country": "NOR",
+    "country_name": "Norway",
+    "lat": 61.152939,
+    "lon": 8.787665,
+    "average_delay": 0.3459
+  },
+  {
+    "country": "ARG",
+    "country_name": "Argentina",
+    "lat": -34.996496,
+    "lon": -64.967282,
+    "average_delay": 0.2592
+  },
+  {
+    "country": "SAU",
+    "country_name": "Saudi Arabia",
+    "lat": 25.624262,
+    "lon": 42.352833,
+    "average_delay": 0.2553
+  },
+  {
+    "country": "MYS",
+    "country_name": "Malaysia",
+    "lat": 4.569375,
+    "lon": 102.265682,
+    "average_delay": 0.2539
+  },
+  {
+    "country": "URY",
+    "country_name": "Uruguay",
+    "lat": -32.875555,
+    "lon": -56.020153,
+    "average_delay": 0.2385
+  },
+  {
+    "country": "BRA",
+    "country_name": "Brazil",
+    "lat": -10.333333,
+    "lon": -53.2,
+    "average_delay": 0.1806
+  },
+  {
+    "country": "HKG",
+    "country_name": "Hong Kong",
+    "lat": 22.350627,
+    "lon": 114.184916,
+    "average_delay": -0.0643
+  },
+  {
+    "country": "SGP",
+    "country_name": "Singapore",
+    "lat": 1.357107,
+    "lon": 103.819499,
+    "average_delay": -0.1286
+  },
+  {
+    "country": "EGY",
+    "country_name": "Egypt",
+    "lat": 26.254049,
+    "lon": 29.267547,
+    "average_delay": -0.1963
+  }
+]

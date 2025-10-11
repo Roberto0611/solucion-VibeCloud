@@ -1,0 +1,1937 @@
+[
+  {
+    "country": "TUR",
+    "city": "istanbul",
+    "average_delay": 2.3187
+  },
+  {
+    "country": "PHL",
+    "city": "manila",
+    "average_delay": 2.1108
+  },
+  {
+    "country": "TWN",
+    "city": "kaohsiung",
+    "average_delay": 2.0497
+  },
+  {
+    "country": "ROU",
+    "city": "bucharest",
+    "average_delay": 1.9187
+  },
+  {
+    "country": "TWN",
+    "city": "taipei",
+    "average_delay": 1.8141
+  },
+  {
+    "country": "ESP",
+    "city": "valencia",
+    "average_delay": 1.7701
+  },
+  {
+    "country": "GRC",
+    "city": "athens",
+    "average_delay": 1.747
+  },
+  {
+    "country": "TWN",
+    "city": "taichung",
+    "average_delay": 1.7217
+  },
+  {
+    "country": "IND",
+    "city": "bangalore",
+    "average_delay": 1.6264
+  },
+  {
+    "country": "MEX",
+    "city": "mexico-city",
+    "average_delay": 1.5467
+  },
+  {
+    "country": "IND",
+    "city": "mumbai",
+    "average_delay": 1.4694
+  },
+  {
+    "country": "BEL",
+    "city": "brussels",
+    "average_delay": 1.4349
+  },
+  {
+    "country": "GBR",
+    "city": "leicester",
+    "average_delay": 1.3891
+  },
+  {
+    "country": "POL",
+    "city": "lodz",
+    "average_delay": 1.3471
+  },
+  {
+    "country": "LTU",
+    "city": "vilnius",
+    "average_delay": 1.3445
+  },
+  {
+    "country": "BGR",
+    "city": "sofia",
+    "average_delay": 1.3421
+  },
+  {
+    "country": "GBR",
+    "city": "manchester",
+    "average_delay": 1.3031
+  },
+  {
+    "country": "IRL",
+    "city": "dublin",
+    "average_delay": 1.2778
+  },
+  {
+    "country": "TUR",
+    "city": "antalya",
+    "average_delay": 1.2774
+  },
+  {
+    "country": "PER",
+    "city": "lima",
+    "average_delay": 1.2758
+  },
+  {
+    "country": "ITA",
+    "city": "rome",
+    "average_delay": 1.2494
+  },
+  {
+    "country": "IRL",
+    "city": "limerick",
+    "average_delay": 1.248
+  },
+  {
+    "country": "AUT",
+    "city": "vienna",
+    "average_delay": 1.243
+  },
+  {
+    "country": "GBR",
+    "city": "liverpool",
+    "average_delay": 1.221
+  },
+  {
+    "country": "TUR",
+    "city": "izmir",
+    "average_delay": 1.2173
+  },
+  {
+    "country": "GBR",
+    "city": "reading",
+    "average_delay": 1.2134
+  },
+  {
+    "country": "USA",
+    "city": "new-york",
+    "average_delay": 1.2084
+  },
+  {
+    "country": "ARE",
+    "city": "sharja",
+    "average_delay": 1.1984
+  },
+  {
+    "country": "GBR",
+    "city": "london",
+    "average_delay": 1.1896
+  },
+  {
+    "country": "POL",
+    "city": "krakow",
+    "average_delay": 1.1877
+  },
+  {
+    "country": "TWN",
+    "city": "tainan",
+    "average_delay": 1.1877
+  },
+  {
+    "country": "GBR",
+    "city": "nottingham",
+    "average_delay": 1.1742
+  },
+  {
+    "country": "COL",
+    "city": "bogota",
+    "average_delay": 1.1658
+  },
+  {
+    "country": "POL",
+    "city": "wroclaw",
+    "average_delay": 1.1506
+  },
+  {
+    "country": "CHE",
+    "city": "geneva",
+    "average_delay": 1.1484
+  },
+  {
+    "country": "GBR",
+    "city": "edinburgh",
+    "average_delay": 1.1361
+  },
+  {
+    "country": "IDN",
+    "city": "jakarta",
+    "average_delay": 1.1021
+  },
+  {
+    "country": "IRL",
+    "city": "cork",
+    "average_delay": 1.1012
+  },
+  {
+    "country": "TWN",
+    "city": "taoyuan",
+    "average_delay": 1.09
+  },
+  {
+    "country": "GRC",
+    "city": "thessaloniki",
+    "average_delay": 1.0886
+  },
+  {
+    "country": "TUR",
+    "city": "adana",
+    "average_delay": 1.0796
+  },
+  {
+    "country": "PRT",
+    "city": "lisbon",
+    "average_delay": 1.0761
+  },
+  {
+    "country": "GBR",
+    "city": "leeds-bradford",
+    "average_delay": 1.0744
+  },
+  {
+    "country": "CAN",
+    "city": "london",
+    "average_delay": 1.0708
+  },
+  {
+    "country": "TUR",
+    "city": "mersin",
+    "average_delay": 1.0561
+  },
+  {
+    "country": "ITA",
+    "city": "bologna",
+    "average_delay": 1.0427
+  },
+  {
+    "country": "FRA",
+    "city": "paris",
+    "average_delay": 1.0408
+  },
+  {
+    "country": "GBR",
+    "city": "southampton",
+    "average_delay": 1.0273
+  },
+  {
+    "country": "ITA",
+    "city": "palermo",
+    "average_delay": 1.026
+  },
+  {
+    "country": "ITA",
+    "city": "genoa",
+    "average_delay": 1.0236
+  },
+  {
+    "country": "ITA",
+    "city": "trieste",
+    "average_delay": 1.0209
+  },
+  {
+    "country": "GBR",
+    "city": "birmingham",
+    "average_delay": 1.0198
+  },
+  {
+    "country": "POL",
+    "city": "warsaw",
+    "average_delay": 1.0152
+  },
+  {
+    "country": "GBR",
+    "city": "hull",
+    "average_delay": 1.011
+  },
+  {
+    "country": "CAN",
+    "city": "vancouver",
+    "average_delay": 1.008
+  },
+  {
+    "country": "CZE",
+    "city": "prague",
+    "average_delay": 1.0071
+  },
+  {
+    "country": "CAN",
+    "city": "winnipeg",
+    "average_delay": 1.0053
+  },
+  {
+    "country": "ITA",
+    "city": "reggio-calabria",
+    "average_delay": 1.004
+  },
+  {
+    "country": "DEU",
+    "city": "berlin",
+    "average_delay": 0.9966
+  },
+  {
+    "country": "CAN",
+    "city": "toronto",
+    "average_delay": 0.9866
+  },
+  {
+    "country": "LUX",
+    "city": "luxembourg",
+    "average_delay": 0.9789
+  },
+  {
+    "country": "ESP",
+    "city": "barcelona",
+    "average_delay": 0.9749
+  },
+  {
+    "country": "ESP",
+    "city": "seville",
+    "average_delay": 0.9688
+  },
+  {
+    "country": "BEL",
+    "city": "antwerp",
+    "average_delay": 0.9669
+  },
+  {
+    "country": "DEU",
+    "city": "kassel",
+    "average_delay": 0.9387
+  },
+  {
+    "country": "HUN",
+    "city": "budapest",
+    "average_delay": 0.9364
+  },
+  {
+    "country": "ESP",
+    "city": "granada",
+    "average_delay": 0.9335
+  },
+  {
+    "country": "DEU",
+    "city": "wiesbaden",
+    "average_delay": 0.9328
+  },
+  {
+    "country": "SAU",
+    "city": "riyadh",
+    "average_delay": 0.9327
+  },
+  {
+    "country": "USA",
+    "city": "miami",
+    "average_delay": 0.9221
+  },
+  {
+    "country": "POL",
+    "city": "poznan",
+    "average_delay": 0.9103
+  },
+  {
+    "country": "CAN",
+    "city": "ottawa",
+    "average_delay": 0.9023
+  },
+  {
+    "country": "CAN",
+    "city": "halifax",
+    "average_delay": 0.9
+  },
+  {
+    "country": "USA",
+    "city": "tampa",
+    "average_delay": 0.8976
+  },
+  {
+    "country": "TUR",
+    "city": "ankara",
+    "average_delay": 0.8948
+  },
+  {
+    "country": "ITA",
+    "city": "catania",
+    "average_delay": 0.8887
+  },
+  {
+    "country": "GBR",
+    "city": "coventry",
+    "average_delay": 0.8879
+  },
+  {
+    "country": "AUS",
+    "city": "melbourne",
+    "average_delay": 0.881
+  },
+  {
+    "country": "DEU",
+    "city": "hamburg",
+    "average_delay": 0.8747
+  },
+  {
+    "country": "GBR",
+    "city": "stoke-on-trent",
+    "average_delay": 0.8735
+  },
+  {
+    "country": "DEU",
+    "city": "dresden",
+    "average_delay": 0.8728
+  },
+  {
+    "country": "ITA",
+    "city": "florence",
+    "average_delay": 0.8651
+  },
+  {
+    "country": "DEU",
+    "city": "frankfurt-am-main",
+    "average_delay": 0.863
+  },
+  {
+    "country": "FRA",
+    "city": "lyon",
+    "average_delay": 0.854
+  },
+  {
+    "country": "GBR",
+    "city": "glasgow",
+    "average_delay": 0.8478
+  },
+  {
+    "country": "ESP",
+    "city": "santa-cruz-de-tenerife",
+    "average_delay": 0.8447
+  },
+  {
+    "country": "BRA",
+    "city": "sao-paulo",
+    "average_delay": 0.8442
+  },
+  {
+    "country": "DEU",
+    "city": "stuttgart",
+    "average_delay": 0.8415
+  },
+  {
+    "country": "AUS",
+    "city": "sydney",
+    "average_delay": 0.8368
+  },
+  {
+    "country": "ITA",
+    "city": "naples",
+    "average_delay": 0.8313
+  },
+  {
+    "country": "FRA",
+    "city": "clermont-ferrand",
+    "average_delay": 0.8296
+  },
+  {
+    "country": "ESP",
+    "city": "valladolid",
+    "average_delay": 0.8288
+  },
+  {
+    "country": "GBR",
+    "city": "bristol",
+    "average_delay": 0.8272
+  },
+  {
+    "country": "DEU",
+    "city": "nuremberg",
+    "average_delay": 0.8264
+  },
+  {
+    "country": "GBR",
+    "city": "brighton-and-hove",
+    "average_delay": 0.8261
+  },
+  {
+    "country": "GBR",
+    "city": "preston",
+    "average_delay": 0.8233
+  },
+  {
+    "country": "GBR",
+    "city": "bournemouth",
+    "average_delay": 0.8191
+  },
+  {
+    "country": "ARE",
+    "city": "dubai",
+    "average_delay": 0.8125
+  },
+  {
+    "country": "CAN",
+    "city": "montreal",
+    "average_delay": 0.8111
+  },
+  {
+    "country": "USA",
+    "city": "washington",
+    "average_delay": 0.804
+  },
+  {
+    "country": "ITA",
+    "city": "turin",
+    "average_delay": 0.7985
+  },
+  {
+    "country": "ZAF",
+    "city": "durban",
+    "average_delay": 0.7984
+  },
+  {
+    "country": "GBR",
+    "city": "belfast",
+    "average_delay": 0.7981
+  },
+  {
+    "country": "ESP",
+    "city": "murcia",
+    "average_delay": 0.7975
+  },
+  {
+    "country": "FRA",
+    "city": "brest",
+    "average_delay": 0.7969
+  },
+  {
+    "country": "DEU",
+    "city": "mannheim",
+    "average_delay": 0.7886
+  },
+  {
+    "country": "ITA",
+    "city": "messina",
+    "average_delay": 0.7853
+  },
+  {
+    "country": "NLD",
+    "city": "haarlem",
+    "average_delay": 0.7853
+  },
+  {
+    "country": "CHE",
+    "city": "lausanne",
+    "average_delay": 0.7786
+  },
+  {
+    "country": "DEU",
+    "city": "aachen",
+    "average_delay": 0.776
+  },
+  {
+    "country": "GBR",
+    "city": "sheffield",
+    "average_delay": 0.7745
+  },
+  {
+    "country": "TUR",
+    "city": "konya",
+    "average_delay": 0.7545
+  },
+  {
+    "country": "POL",
+    "city": "szczecin",
+    "average_delay": 0.7518
+  },
+  {
+    "country": "USA",
+    "city": "atlanta",
+    "average_delay": 0.7465
+  },
+  {
+    "country": "DEU",
+    "city": "monchengladbach",
+    "average_delay": 0.7447
+  },
+  {
+    "country": "NLD",
+    "city": "arnhem",
+    "average_delay": 0.7443
+  },
+  {
+    "country": "DEU",
+    "city": "freiburg",
+    "average_delay": 0.7381
+  },
+  {
+    "country": "ESP",
+    "city": "a-coruna",
+    "average_delay": 0.7308
+  },
+  {
+    "country": "GBR",
+    "city": "cardiff",
+    "average_delay": 0.7308
+  },
+  {
+    "country": "FRA",
+    "city": "toulouse",
+    "average_delay": 0.7286
+  },
+  {
+    "country": "USA",
+    "city": "seattle",
+    "average_delay": 0.7281
+  },
+  {
+    "country": "FRA",
+    "city": "strasbourg",
+    "average_delay": 0.7277
+  },
+  {
+    "country": "POL",
+    "city": "gdansk-gdynia-sopot",
+    "average_delay": 0.722
+  },
+  {
+    "country": "ITA",
+    "city": "milan",
+    "average_delay": 0.7161
+  },
+  {
+    "country": "FRA",
+    "city": "lille",
+    "average_delay": 0.715
+  },
+  {
+    "country": "GBR",
+    "city": "swansea",
+    "average_delay": 0.714
+  },
+  {
+    "country": "PRT",
+    "city": "funchal",
+    "average_delay": 0.7126
+  },
+  {
+    "country": "ESP",
+    "city": "oviedo",
+    "average_delay": 0.7077
+  },
+  {
+    "country": "DEU",
+    "city": "cologne",
+    "average_delay": 0.7069
+  },
+  {
+    "country": "TUR",
+    "city": "bursa",
+    "average_delay": 0.7058
+  },
+  {
+    "country": "ITA",
+    "city": "prato",
+    "average_delay": 0.7016
+  },
+  {
+    "country": "CHE",
+    "city": "lugano",
+    "average_delay": 0.699
+  },
+  {
+    "country": "ESP",
+    "city": "zaragoza",
+    "average_delay": 0.697
+  },
+  {
+    "country": "AUT",
+    "city": "graz",
+    "average_delay": 0.6946
+  },
+  {
+    "country": "CAN",
+    "city": "edmonton",
+    "average_delay": 0.691
+  },
+  {
+    "country": "FRA",
+    "city": "nantes",
+    "average_delay": 0.6882
+  },
+  {
+    "country": "PRT",
+    "city": "porto",
+    "average_delay": 0.6842
+  },
+  {
+    "country": "NLD",
+    "city": "the-hague",
+    "average_delay": 0.6686
+  },
+  {
+    "country": "USA",
+    "city": "orlando",
+    "average_delay": 0.6683
+  },
+  {
+    "country": "SVK",
+    "city": "kosice",
+    "average_delay": 0.6682
+  },
+  {
+    "country": "LVA",
+    "city": "riga",
+    "average_delay": 0.6669
+  },
+  {
+    "country": "FRA",
+    "city": "nancy",
+    "average_delay": 0.6661
+  },
+  {
+    "country": "AUS",
+    "city": "gold-coast",
+    "average_delay": 0.6648
+  },
+  {
+    "country": "USA",
+    "city": "new-orleans",
+    "average_delay": 0.6631
+  },
+  {
+    "country": "CAN",
+    "city": "hamilton",
+    "average_delay": 0.6624
+  },
+  {
+    "country": "DEU",
+    "city": "munich",
+    "average_delay": 0.6592
+  },
+  {
+    "country": "USA",
+    "city": "los-angeles",
+    "average_delay": 0.6569
+  },
+  {
+    "country": "ESP",
+    "city": "madrid",
+    "average_delay": 0.6565
+  },
+  {
+    "country": "USA",
+    "city": "chicago",
+    "average_delay": 0.6512
+  },
+  {
+    "country": "FRA",
+    "city": "nice",
+    "average_delay": 0.6475
+  },
+  {
+    "country": "AUS",
+    "city": "hobart",
+    "average_delay": 0.6453
+  },
+  {
+    "country": "DEU",
+    "city": "ruhr-region-west",
+    "average_delay": 0.643
+  },
+  {
+    "country": "EST",
+    "city": "tallinn",
+    "average_delay": 0.6425
+  },
+  {
+    "country": "NZL",
+    "city": "christchurch",
+    "average_delay": 0.6364
+  },
+  {
+    "country": "ZAF",
+    "city": "johannesburg",
+    "average_delay": 0.6274
+  },
+  {
+    "country": "CHE",
+    "city": "bern",
+    "average_delay": 0.6248
+  },
+  {
+    "country": "DEU",
+    "city": "leipzig",
+    "average_delay": 0.6247
+  },
+  {
+    "country": "SVN",
+    "city": "ljubljana",
+    "average_delay": 0.6242
+  },
+  {
+    "country": "ESP",
+    "city": "vitoria-gasteiz",
+    "average_delay": 0.6228
+  },
+  {
+    "country": "USA",
+    "city": "honolulu",
+    "average_delay": 0.6197
+  },
+  {
+    "country": "SVK",
+    "city": "bratislava",
+    "average_delay": 0.6193
+  },
+  {
+    "country": "USA",
+    "city": "san-francisco",
+    "average_delay": 0.6186
+  },
+  {
+    "country": "DEU",
+    "city": "munster",
+    "average_delay": 0.6173
+  },
+  {
+    "country": "FRA",
+    "city": "rennes",
+    "average_delay": 0.6158
+  },
+  {
+    "country": "FRA",
+    "city": "bordeaux",
+    "average_delay": 0.6152
+  },
+  {
+    "country": "FRA",
+    "city": "rouen",
+    "average_delay": 0.6142
+  },
+  {
+    "country": "NLD",
+    "city": "amsterdam",
+    "average_delay": 0.6134
+  },
+  {
+    "country": "DEU",
+    "city": "bielefeld",
+    "average_delay": 0.613
+  },
+  {
+    "country": "GBR",
+    "city": "newcastle-sunderland",
+    "average_delay": 0.6106
+  },
+  {
+    "country": "ISL",
+    "city": "reykjavik",
+    "average_delay": 0.6103
+  },
+  {
+    "country": "AUS",
+    "city": "adelaide",
+    "average_delay": 0.6062
+  },
+  {
+    "country": "IND",
+    "city": "new-delhi",
+    "average_delay": 0.604
+  },
+  {
+    "country": "SWE",
+    "city": "stockholm",
+    "average_delay": 0.6039
+  },
+  {
+    "country": "USA",
+    "city": "las-vegas",
+    "average_delay": 0.5983
+  },
+  {
+    "country": "PRT",
+    "city": "braga",
+    "average_delay": 0.5973
+  },
+  {
+    "country": "NLD",
+    "city": "rotterdam",
+    "average_delay": 0.5957
+  },
+  {
+    "country": "DEU",
+    "city": "bonn",
+    "average_delay": 0.5946
+  },
+  {
+    "country": "CHE",
+    "city": "basel",
+    "average_delay": 0.5878
+  },
+  {
+    "country": "ESP",
+    "city": "gijon",
+    "average_delay": 0.5872
+  },
+  {
+    "country": "FRA",
+    "city": "grenoble",
+    "average_delay": 0.587
+  },
+  {
+    "country": "DEU",
+    "city": "dusseldorf",
+    "average_delay": 0.5853
+  },
+  {
+    "country": "BEL",
+    "city": "leuven",
+    "average_delay": 0.5801
+  },
+  {
+    "country": "FRA",
+    "city": "montpellier",
+    "average_delay": 0.5796
+  },
+  {
+    "country": "SAU",
+    "city": "jeddah",
+    "average_delay": 0.5791
+  },
+  {
+    "country": "CHE",
+    "city": "zurich",
+    "average_delay": 0.5746
+  },
+  {
+    "country": "CAN",
+    "city": "kitchener-waterloo",
+    "average_delay": 0.5733
+  },
+  {
+    "country": "ESP",
+    "city": "santander",
+    "average_delay": 0.573
+  },
+  {
+    "country": "POL",
+    "city": "bydgoszcz",
+    "average_delay": 0.5723
+  },
+  {
+    "country": "NZL",
+    "city": "dunedin",
+    "average_delay": 0.5712
+  },
+  {
+    "country": "AUS",
+    "city": "brisbane",
+    "average_delay": 0.5704
+  },
+  {
+    "country": "ZAF",
+    "city": "cape-town",
+    "average_delay": 0.5694
+  },
+  {
+    "country": "ITA",
+    "city": "livorno",
+    "average_delay": 0.5681
+  },
+  {
+    "country": "USA",
+    "city": "austin",
+    "average_delay": 0.5662
+  },
+  {
+    "country": "DEU",
+    "city": "wuppertal",
+    "average_delay": 0.5581
+  },
+  {
+    "country": "DEU",
+    "city": "ruhr-region-east",
+    "average_delay": 0.5579
+  },
+  {
+    "country": "ESP",
+    "city": "malaga",
+    "average_delay": 0.5567
+  },
+  {
+    "country": "USA",
+    "city": "cape-coral-fort-myers",
+    "average_delay": 0.556
+  },
+  {
+    "country": "NZL",
+    "city": "wellington",
+    "average_delay": 0.5529
+  },
+  {
+    "country": "SWE",
+    "city": "uppsala",
+    "average_delay": 0.5461
+  },
+  {
+    "country": "ITA",
+    "city": "reggio-emilia",
+    "average_delay": 0.5458
+  },
+  {
+    "country": "USA",
+    "city": "boston",
+    "average_delay": 0.5457
+  },
+  {
+    "country": "JPN",
+    "city": "sapporo",
+    "average_delay": 0.5397
+  },
+  {
+    "country": "FRA",
+    "city": "marseille",
+    "average_delay": 0.5341
+  },
+  {
+    "country": "ITA",
+    "city": "bari",
+    "average_delay": 0.5334
+  },
+  {
+    "country": "BEL",
+    "city": "liege",
+    "average_delay": 0.5287
+  },
+  {
+    "country": "USA",
+    "city": "san-jose",
+    "average_delay": 0.5285
+  },
+  {
+    "country": "USA",
+    "city": "charleston",
+    "average_delay": 0.5273
+  },
+  {
+    "country": "USA",
+    "city": "greenville",
+    "average_delay": 0.5245
+  },
+  {
+    "country": "DEU",
+    "city": "augsburg",
+    "average_delay": 0.5242
+  },
+  {
+    "country": "JPN",
+    "city": "tokyo",
+    "average_delay": 0.5239
+  },
+  {
+    "country": "FRA",
+    "city": "le-mans",
+    "average_delay": 0.5211
+  },
+  {
+    "country": "DNK",
+    "city": "copenhagen",
+    "average_delay": 0.5188
+  },
+  {
+    "country": "FRA",
+    "city": "orleans",
+    "average_delay": 0.5177
+  },
+  {
+    "country": "NZL",
+    "city": "auckland",
+    "average_delay": 0.5137
+  },
+  {
+    "country": "NOR",
+    "city": "oslo",
+    "average_delay": 0.5131
+  },
+  {
+    "country": "ESP",
+    "city": "palma-de-mallorca",
+    "average_delay": 0.5126
+  },
+  {
+    "country": "JPN",
+    "city": "osaka",
+    "average_delay": 0.5126
+  },
+  {
+    "country": "GBR",
+    "city": "portsmouth",
+    "average_delay": 0.5122
+  },
+  {
+    "country": "ESP",
+    "city": "las-palmas",
+    "average_delay": 0.5102
+  },
+  {
+    "country": "FRA",
+    "city": "le-havre",
+    "average_delay": 0.5093
+  },
+  {
+    "country": "BEL",
+    "city": "namur",
+    "average_delay": 0.5073
+  },
+  {
+    "country": "ITA",
+    "city": "parma",
+    "average_delay": 0.507
+  },
+  {
+    "country": "DEU",
+    "city": "hannover",
+    "average_delay": 0.505
+  },
+  {
+    "country": "CHL",
+    "city": "santiago",
+    "average_delay": 0.5042
+  },
+  {
+    "country": "DNK",
+    "city": "aarhus",
+    "average_delay": 0.493
+  },
+  {
+    "country": "FRA",
+    "city": "reims",
+    "average_delay": 0.4928
+  },
+  {
+    "country": "ESP",
+    "city": "vigo",
+    "average_delay": 0.4924
+  },
+  {
+    "country": "USA",
+    "city": "indianapolis",
+    "average_delay": 0.4915
+  },
+  {
+    "country": "USA",
+    "city": "nashville",
+    "average_delay": 0.4887
+  },
+  {
+    "country": "THA",
+    "city": "bangkok",
+    "average_delay": 0.4883
+  },
+  {
+    "country": "CAN",
+    "city": "calgary",
+    "average_delay": 0.4871
+  },
+  {
+    "country": "USA",
+    "city": "charlotte",
+    "average_delay": 0.4856
+  },
+  {
+    "country": "AUT",
+    "city": "innsbruck",
+    "average_delay": 0.4846
+  },
+  {
+    "country": "USA",
+    "city": "baltimore",
+    "average_delay": 0.484
+  },
+  {
+    "country": "ITA",
+    "city": "verona",
+    "average_delay": 0.4814
+  },
+  {
+    "country": "CAN",
+    "city": "quebec",
+    "average_delay": 0.4807
+  },
+  {
+    "country": "POL",
+    "city": "bielsko-biala",
+    "average_delay": 0.48
+  },
+  {
+    "country": "FRA",
+    "city": "saint-etienne",
+    "average_delay": 0.4764
+  },
+  {
+    "country": "DEU",
+    "city": "kiel",
+    "average_delay": 0.4742
+  },
+  {
+    "country": "POL",
+    "city": "katowice-urban-area",
+    "average_delay": 0.471
+  },
+  {
+    "country": "FRA",
+    "city": "dijon",
+    "average_delay": 0.4696
+  },
+  {
+    "country": "IND",
+    "city": "pune",
+    "average_delay": 0.4692
+  },
+  {
+    "country": "USA",
+    "city": "cincinnati",
+    "average_delay": 0.4684
+  },
+  {
+    "country": "NLD",
+    "city": "eindhoven",
+    "average_delay": 0.4677
+  },
+  {
+    "country": "ZAF",
+    "city": "pretoria",
+    "average_delay": 0.4671
+  },
+  {
+    "country": "FIN",
+    "city": "turku",
+    "average_delay": 0.4656
+  },
+  {
+    "country": "USA",
+    "city": "boise",
+    "average_delay": 0.4653
+  },
+  {
+    "country": "FRA",
+    "city": "tours",
+    "average_delay": 0.464
+  },
+  {
+    "country": "DEU",
+    "city": "bremen",
+    "average_delay": 0.454
+  },
+  {
+    "country": "AUT",
+    "city": "salzburg",
+    "average_delay": 0.4505
+  },
+  {
+    "country": "NLD",
+    "city": "nijmegen",
+    "average_delay": 0.4472
+  },
+  {
+    "country": "AUT",
+    "city": "linz",
+    "average_delay": 0.4449
+  },
+  {
+    "country": "BEL",
+    "city": "ghent",
+    "average_delay": 0.443
+  },
+  {
+    "country": "ESP",
+    "city": "alicante",
+    "average_delay": 0.442
+  },
+  {
+    "country": "TUR",
+    "city": "gaziantep",
+    "average_delay": 0.4396
+  },
+  {
+    "country": "NLD",
+    "city": "den-bosch",
+    "average_delay": 0.4395
+  },
+  {
+    "country": "ITA",
+    "city": "ravenna",
+    "average_delay": 0.4388
+  },
+  {
+    "country": "POL",
+    "city": "bialystok",
+    "average_delay": 0.4387
+  },
+  {
+    "country": "BEL",
+    "city": "bruges",
+    "average_delay": 0.4379
+  },
+  {
+    "country": "USA",
+    "city": "baton-rouge",
+    "average_delay": 0.4377
+  },
+  {
+    "country": "GBR",
+    "city": "middlesbrough",
+    "average_delay": 0.4341
+  },
+  {
+    "country": "ITA",
+    "city": "cagliari",
+    "average_delay": 0.4306
+  },
+  {
+    "country": "ESP",
+    "city": "pamplona",
+    "average_delay": 0.4267
+  },
+  {
+    "country": "USA",
+    "city": "albuquerque",
+    "average_delay": 0.4258
+  },
+  {
+    "country": "ZAF",
+    "city": "bloemfontein",
+    "average_delay": 0.4185
+  },
+  {
+    "country": "KWT",
+    "city": "kuwait-city",
+    "average_delay": 0.4128
+  },
+  {
+    "country": "BEL",
+    "city": "kortrijk",
+    "average_delay": 0.4107
+  },
+  {
+    "country": "USA",
+    "city": "st-louis",
+    "average_delay": 0.4101
+  },
+  {
+    "country": "USA",
+    "city": "grand-rapids",
+    "average_delay": 0.4061
+  },
+  {
+    "country": "USA",
+    "city": "sacramento",
+    "average_delay": 0.4052
+  },
+  {
+    "country": "DEU",
+    "city": "karlsruhe",
+    "average_delay": 0.4036
+  },
+  {
+    "country": "NLD",
+    "city": "utrecht",
+    "average_delay": 0.4008
+  },
+  {
+    "country": "USA",
+    "city": "new-haven",
+    "average_delay": 0.3965
+  },
+  {
+    "country": "USA",
+    "city": "columbus",
+    "average_delay": 0.3951
+  },
+  {
+    "country": "ITA",
+    "city": "padua",
+    "average_delay": 0.3939
+  },
+  {
+    "country": "NLD",
+    "city": "breda",
+    "average_delay": 0.3892
+  },
+  {
+    "country": "ITA",
+    "city": "brescia",
+    "average_delay": 0.3852
+  },
+  {
+    "country": "USA",
+    "city": "pittsburgh",
+    "average_delay": 0.3836
+  },
+  {
+    "country": "NOR",
+    "city": "trondheim",
+    "average_delay": 0.382
+  },
+  {
+    "country": "PRT",
+    "city": "coimbra",
+    "average_delay": 0.3797
+  },
+  {
+    "country": "NLD",
+    "city": "amersfoort",
+    "average_delay": 0.3775
+  },
+  {
+    "country": "ESP",
+    "city": "cordoba",
+    "average_delay": 0.3702
+  },
+  {
+    "country": "USA",
+    "city": "dallas-fort-worth",
+    "average_delay": 0.3678
+  },
+  {
+    "country": "QAT",
+    "city": "doha",
+    "average_delay": 0.3653
+  },
+  {
+    "country": "USA",
+    "city": "providence",
+    "average_delay": 0.3646
+  },
+  {
+    "country": "USA",
+    "city": "houston",
+    "average_delay": 0.3627
+  },
+  {
+    "country": "POL",
+    "city": "lublin",
+    "average_delay": 0.362
+  },
+  {
+    "country": "NLD",
+    "city": "tilburg",
+    "average_delay": 0.3612
+  },
+  {
+    "country": "BRA",
+    "city": "belo-horizonte",
+    "average_delay": 0.3608
+  },
+  {
+    "country": "AUS",
+    "city": "newcastle",
+    "average_delay": 0.3571
+  },
+  {
+    "country": "USA",
+    "city": "mcallen",
+    "average_delay": 0.3569
+  },
+  {
+    "country": "USA",
+    "city": "denver",
+    "average_delay": 0.355
+  },
+  {
+    "country": "USA",
+    "city": "detroit",
+    "average_delay": 0.3489
+  },
+  {
+    "country": "AUS",
+    "city": "wollongong",
+    "average_delay": 0.3481
+  },
+  {
+    "country": "USA",
+    "city": "salt-lake-city",
+    "average_delay": 0.3469
+  },
+  {
+    "country": "FIN",
+    "city": "helsinki",
+    "average_delay": 0.3464
+  },
+  {
+    "country": "NZL",
+    "city": "tauranga",
+    "average_delay": 0.3456
+  },
+  {
+    "country": "ESP",
+    "city": "bilbao",
+    "average_delay": 0.3421
+  },
+  {
+    "country": "ESP",
+    "city": "cartagena",
+    "average_delay": 0.3381
+  },
+  {
+    "country": "USA",
+    "city": "phoenix",
+    "average_delay": 0.3369
+  },
+  {
+    "country": "USA",
+    "city": "minneapolis",
+    "average_delay": 0.3328
+  },
+  {
+    "country": "USA",
+    "city": "allentown",
+    "average_delay": 0.3319
+  },
+  {
+    "country": "USA",
+    "city": "jacksonville",
+    "average_delay": 0.3314
+  },
+  {
+    "country": "BEL",
+    "city": "mons",
+    "average_delay": 0.3293
+  },
+  {
+    "country": "USA",
+    "city": "columbia",
+    "average_delay": 0.3285
+  },
+  {
+    "country": "FIN",
+    "city": "tampere",
+    "average_delay": 0.3206
+  },
+  {
+    "country": "NOR",
+    "city": "bergen",
+    "average_delay": 0.3133
+  },
+  {
+    "country": "FRA",
+    "city": "avignon",
+    "average_delay": 0.3097
+  },
+  {
+    "country": "USA",
+    "city": "birmingham",
+    "average_delay": 0.3075
+  },
+  {
+    "country": "USA",
+    "city": "raleigh",
+    "average_delay": 0.3061
+  },
+  {
+    "country": "USA",
+    "city": "milwaukee",
+    "average_delay": 0.3051
+  },
+  {
+    "country": "AUS",
+    "city": "perth",
+    "average_delay": 0.3039
+  },
+  {
+    "country": "USA",
+    "city": "fresno",
+    "average_delay": 0.3025
+  },
+  {
+    "country": "NZL",
+    "city": "hamilton",
+    "average_delay": 0.2989
+  },
+  {
+    "country": "USA",
+    "city": "tucson",
+    "average_delay": 0.2979
+  },
+  {
+    "country": "NLD",
+    "city": "zwolle",
+    "average_delay": 0.2967
+  },
+  {
+    "country": "ITA",
+    "city": "modena",
+    "average_delay": 0.2966
+  },
+  {
+    "country": "USA",
+    "city": "san-antonio",
+    "average_delay": 0.2962
+  },
+  {
+    "country": "USA",
+    "city": "worcester",
+    "average_delay": 0.2948
+  },
+  {
+    "country": "SWE",
+    "city": "malmo",
+    "average_delay": 0.2907
+  },
+  {
+    "country": "JPN",
+    "city": "nagoya",
+    "average_delay": 0.2813
+  },
+  {
+    "country": "CZE",
+    "city": "ostrava",
+    "average_delay": 0.2807
+  },
+  {
+    "country": "USA",
+    "city": "virginia-beach",
+    "average_delay": 0.2775
+  },
+  {
+    "country": "NLD",
+    "city": "leiden",
+    "average_delay": 0.2734
+  },
+  {
+    "country": "USA",
+    "city": "richmond",
+    "average_delay": 0.2687
+  },
+  {
+    "country": "USA",
+    "city": "cleveland",
+    "average_delay": 0.2655
+  },
+  {
+    "country": "USA",
+    "city": "albany",
+    "average_delay": 0.2641
+  },
+  {
+    "country": "USA",
+    "city": "kansas-city",
+    "average_delay": 0.2614
+  },
+  {
+    "country": "USA",
+    "city": "riverside",
+    "average_delay": 0.2611
+  },
+  {
+    "country": "BEL",
+    "city": "charleroi",
+    "average_delay": 0.26
+  },
+  {
+    "country": "ARG",
+    "city": "buenos-aires",
+    "average_delay": 0.2592
+  },
+  {
+    "country": "USA",
+    "city": "rochester",
+    "average_delay": 0.2557
+  },
+  {
+    "country": "USA",
+    "city": "philadelphia",
+    "average_delay": 0.2555
+  },
+  {
+    "country": "MYS",
+    "city": "kuala-lumpur",
+    "average_delay": 0.2539
+  },
+  {
+    "country": "USA",
+    "city": "hartford",
+    "average_delay": 0.2537
+  },
+  {
+    "country": "DNK",
+    "city": "odense",
+    "average_delay": 0.2514
+  },
+  {
+    "country": "ITA",
+    "city": "taranto",
+    "average_delay": 0.2513
+  },
+  {
+    "country": "USA",
+    "city": "dayton",
+    "average_delay": 0.2508
+  },
+  {
+    "country": "TUR",
+    "city": "kayseri",
+    "average_delay": 0.2441
+  },
+  {
+    "country": "BRA",
+    "city": "rio-de-janeiro",
+    "average_delay": 0.2403
+  },
+  {
+    "country": "URY",
+    "city": "montevideo",
+    "average_delay": 0.2385
+  },
+  {
+    "country": "SWE",
+    "city": "gothenburg",
+    "average_delay": 0.2353
+  },
+  {
+    "country": "FRA",
+    "city": "toulon",
+    "average_delay": 0.2334
+  },
+  {
+    "country": "USA",
+    "city": "san-diego",
+    "average_delay": 0.229
+  },
+  {
+    "country": "ESP",
+    "city": "cadiz",
+    "average_delay": 0.2249
+  },
+  {
+    "country": "USA",
+    "city": "louisville",
+    "average_delay": 0.2227
+  },
+  {
+    "country": "NLD",
+    "city": "groningen",
+    "average_delay": 0.2094
+  },
+  {
+    "country": "SAU",
+    "city": "dammam",
+    "average_delay": 0.2071
+  },
+  {
+    "country": "USA",
+    "city": "knoxville",
+    "average_delay": 0.2037
+  },
+  {
+    "country": "ARE",
+    "city": "fujairah",
+    "average_delay": 0.1938
+  },
+  {
+    "country": "USA",
+    "city": "portland",
+    "average_delay": 0.1904
+  },
+  {
+    "country": "USA",
+    "city": "colorado-springs",
+    "average_delay": 0.1892
+  },
+  {
+    "country": "USA",
+    "city": "omaha-council-bluffs",
+    "average_delay": 0.187
+  },
+  {
+    "country": "CZE",
+    "city": "brno",
+    "average_delay": 0.1788
+  },
+  {
+    "country": "NOR",
+    "city": "stavanger",
+    "average_delay": 0.1748
+  },
+  {
+    "country": "JPN",
+    "city": "kobe",
+    "average_delay": 0.1673
+  },
+  {
+    "country": "USA",
+    "city": "buffalo",
+    "average_delay": 0.1569
+  },
+  {
+    "country": "ITA",
+    "city": "pescara",
+    "average_delay": 0.1558
+  },
+  {
+    "country": "USA",
+    "city": "oxnard-thousand-oaks-ventura",
+    "average_delay": 0.1516
+  },
+  {
+    "country": "ARE",
+    "city": "al-ain",
+    "average_delay": 0.1503
+  },
+  {
+    "country": "NLD",
+    "city": "apeldoorn",
+    "average_delay": 0.1494
+  },
+  {
+    "country": "ARE",
+    "city": "ras-al-khaimah",
+    "average_delay": 0.1472
+  },
+  {
+    "country": "ESP",
+    "city": "san-sebastian",
+    "average_delay": 0.1456
+  },
+  {
+    "country": "USA",
+    "city": "syracuse",
+    "average_delay": 0.144
+  },
+  {
+    "country": "USA",
+    "city": "akron",
+    "average_delay": 0.1423
+  },
+  {
+    "country": "USA",
+    "city": "tulsa",
+    "average_delay": 0.1329
+  },
+  {
+    "country": "ARE",
+    "city": "abu-dhabi",
+    "average_delay": 0.1312
+  },
+  {
+    "country": "USA",
+    "city": "bakersfield",
+    "average_delay": 0.1303
+  },
+  {
+    "country": "USA",
+    "city": "winston-salem",
+    "average_delay": 0.1172
+  },
+  {
+    "country": "BRA",
+    "city": "brasilia",
+    "average_delay": 0.1108
+  },
+  {
+    "country": "USA",
+    "city": "little-rock",
+    "average_delay": 0.1021
+  },
+  {
+    "country": "AUS",
+    "city": "canberra",
+    "average_delay": 0.1002
+  },
+  {
+    "country": "BRA",
+    "city": "porto-alegre",
+    "average_delay": 0.0648
+  },
+  {
+    "country": "USA",
+    "city": "greensboro-high-point",
+    "average_delay": 0.0582
+  },
+  {
+    "country": "BRA",
+    "city": "salvador",
+    "average_delay": 0.0293
+  },
+  {
+    "country": "BRA",
+    "city": "fortaleza",
+    "average_delay": 0.0196
+  },
+  {
+    "country": "USA",
+    "city": "oklahoma-city",
+    "average_delay": 0.0087
+  },
+  {
+    "country": "BRA",
+    "city": "curitiba",
+    "average_delay": -0.0004
+  },
+  {
+    "country": "NLD",
+    "city": "almere",
+    "average_delay": -0.0228
+  },
+  {
+    "country": "BRA",
+    "city": "recife",
+    "average_delay": -0.0486
+  },
+  {
+    "country": "HKG",
+    "city": "hong-kong",
+    "average_delay": -0.0643
+  },
+  {
+    "country": "USA",
+    "city": "memphis",
+    "average_delay": -0.0705
+  },
+  {
+    "country": "SGP",
+    "city": "singapore",
+    "average_delay": -0.1286
+  },
+  {
+    "country": "SAU",
+    "city": "medina",
+    "average_delay": -0.178
+  },
+  {
+    "country": "EGY",
+    "city": "cairo",
+    "average_delay": -0.1963
+  },
+  {
+    "country": "USA",
+    "city": "el-paso",
+    "average_delay": -0.2655
+  },
+  {
+    "country": "SAU",
+    "city": "mecca",
+    "average_delay": -0.2727
+  }
+]
