@@ -1,14 +1,14 @@
 import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'  // Contenedor 3D
-import Earth from '../../js/pages/earth'  // Componente de la Tierra con texturas reales
-import { getDensityDescriptors } from '../../js/processfetch'
+import Earth from './earth'  // Componente de la Tierra con texturas reales
+import { getDensityDescriptors } from '../processfetch'
 
 
 type HomePageProps = {
     selectedDataset?: string;
 }
 
-const HomePage: React.FC<HomePageProps> = ({ selectedDataset: propSelectedDataset }) => {
+const EarthPage: React.FC<HomePageProps> = ({ selectedDataset: propSelectedDataset }) => {
     const [selectedDataset, setSelectedDataset] = React.useState(propSelectedDataset || '../DatosJSON/csvjson2020.json')
     const [markers, setMarkers] = React.useState<any[] | null>(null)
     const [loadingMarkers, setLoadingMarkers] = React.useState(false)
@@ -55,8 +55,8 @@ const HomePage: React.FC<HomePageProps> = ({ selectedDataset: propSelectedDatase
     return (
         <Suspense fallback={null}>
             <div style={{
-                width: '100vw',      // Ancho completo del viewport
-                height: '100vh',     // Alto completo del viewport
+                width: '100%',      // Ancho completo del viewport
+                height: '100%',     // Alto completo del viewport
                 display: 'flex',     // Layout flexbox horizontal
                 background: 'black', // Fondo negro espacial
             }}>
@@ -71,4 +71,4 @@ const HomePage: React.FC<HomePageProps> = ({ selectedDataset: propSelectedDatase
     )
 }
 
-export default HomePage
+export default EarthPage;

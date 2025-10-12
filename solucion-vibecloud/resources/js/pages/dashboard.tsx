@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import HomePage from './earthpage';
+import HomePage from './EarthPage';
 import FiltroMay from '../charts/filtromay';
 import React, { useState } from 'react';
 import SelectDataDashboard from '@/components/selectDataDashboard';

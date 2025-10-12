@@ -90,7 +90,7 @@ function Earth({ datasetUrl, markers = [] }: EarthProps) {
                 fade={true}
             />
 
-            <PerspectiveCamera position={[3, 1, 6]} />
+            <PerspectiveCamera makeDefault position={[0, 0, 7]} fov={50} />
 
             {/* OrbitControls permite rotar/zoom/pan con el ratón. */}
             <OrbitControls
@@ -101,11 +101,12 @@ function Earth({ datasetUrl, markers = [] }: EarthProps) {
                 zoomSpeed={0.6}
                 panSpeed={0.5}
                 rotateSpeed={0.4}
-                makeDefault
                 // Pausar la rotación automática mientras el usuario arrastra
                 onStart={() => setIsUserInteracting(true)}
                 onEnd={() => setIsUserInteracting(false)}
                 target={[0, 0, 3]}
+                minDistance={2}
+                maxDistance={15}
             />
 
             <mesh ref={cloudsRef} position={[0, 0, 3]} rotation={[0, 0, 0]} >
