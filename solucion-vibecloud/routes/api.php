@@ -15,4 +15,4 @@ use App\Http\Controllers\AWSController;
 |
 */
 
-Route::post('/sm-test2', [AWSController::class, 'smTest2']);
+Route::post('/predict', [AWSController::class, 'predict']);

@@ -35,7 +35,7 @@ class AWSController extends Controller
     return response((string) $res->get('Body'), 200)->header('Content-Type', 'application/json');
     }
 
-    public function smTest2(Request $request){
+    public function predict(Request $request){
         $client = new SageMakerRuntimeClient([
         'version' => '2017-05-13',
         'region'  => env('AWS_REGION', 'us-east-1'),
