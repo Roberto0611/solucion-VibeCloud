@@ -121,8 +121,18 @@ export async function getDensityDescriptors(options = {}) {
     const radius = (typeof RADIUS !== 'undefined') ? RADIUS : (options && options.radius) ? options.radius : 1;
 
     try {
-        const dataUrl = new URL(url, import.meta.url);
-        const res = await fetch(dataUrl.href);
+        // Handle both relative and absolute URLs
+        let fetchUrl;
+        if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) {
+            // Absolute URL or root-relative path - use directly
+            fetchUrl = url;
+        } else {
+            // Relative URL - resolve relative to this module
+            const dataUrl = new URL(url, import.meta.url);
+            fetchUrl = dataUrl.href;
+        }
+
+        const res = await fetch(fetchUrl);
         if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
         const data = await res.json();
 
@@ -138,36 +148,46 @@ export async function getDensityDescriptors(options = {}) {
         const descriptors = [];
 
         data.forEach((row) => {
-            let name, lat, lon, pop
+            let name, city, country, lat, lon, delay
             if (Array.isArray(row)) {
                 name = row[0]
                 lat = Number(row[1])
                 lon = Number(row[2])
-                pop = Number(row[3]) || 0
+                delay = Number(row[3]) || 0
             } else if (row && typeof row === 'object') {
-                name = pick(row, ['Name', 'name', 'country', 'Country', 'ISO']) || ''
+                // Get city or country name
+                city = pick(row, ['city', 'City', 'CITY'])
+                country = pick(row, ['country_name', 'Country_Name', 'COUNTRY_NAME'])
+                name = city || country || pick(row, ['Name', 'name', 'country', 'Country', 'ISO']) || ''
+
+                // Get coordinates
                 const latRaw = pick(row, ['PWC_Lat', 'pwc_lat', 'lat', 'Lat', 'latitude', 'Latitude'])
                 const lonRaw = pick(row, ['PWC_Lon', 'pwc_lon', 'lon', 'Lon', 'longitude', 'Longitude'])
-                const popRaw = pick(row, ['Pop', 'pop', 'Population', 'population', 'POP'])
+
+                // Get delay (traffic delay in minutes)
+                const delayRaw = pick(row, ['average_delay', 'delay', 'Delay', 'DELAY', 'Pop', 'pop', 'Population', 'population'])
+
                 lat = latRaw !== undefined ? Number(latRaw) : NaN
                 lon = lonRaw !== undefined ? Number(lonRaw) : NaN
-                pop = popRaw !== undefined ? Number(popRaw) : 0
+                delay = delayRaw !== undefined ? Number(delayRaw) : 0
             } else {
                 return
             }
 
             if (isNaN(lat) || isNaN(lon)) return; // skip invalid coords
 
-            // Descriptor height - balanced approach
-            const minHeight = 0.005 * radius;
-            const maxHeight = 3 * radius;
-            const normalized = pop / 100000; // Normalize by 100K
-            const raw = Math.pow(normalized, 1 / 3) * 0.08 * radius;
+            // Descriptor height based on traffic delay
+            const minHeight = 0.01 * radius;  // Increased minimum height
+            const maxHeight = 0.5 * radius;   // Reasonable max height
+            // Scale height based on delay (higher delay = taller marker)
+            const normalized = Math.abs(delay) / 2.5; // Normalize by max delay ~2.5
+            const raw = Math.pow(normalized, 0.5) * 0.3 * radius;
             const height = Math.max(minHeight, Math.min(maxHeight, raw));
+
             const basePos = latLongToVector3(lat, lon, radius, 0);
             const topPos = latLongToVector3(lat, lon, radius, height);
             const midpoint = new THREE.Vector3().lerpVectors(basePos, topPos, 0.5);
-            const markerSize = Math.max(0.01 * radius, 0.02 * radius);
+            const markerSize = Math.max(0.02 * radius, 0.03 * radius);  // Increased marker size
 
             // Compute quaternion/orientation so the box faces outward. Use a temporary Object3D.
             const temp = new THREE.Object3D();
@@ -178,7 +198,8 @@ export async function getDensityDescriptors(options = {}) {
 
             descriptors.push({
                 name,
-                pop,
+                city,
+                delay,
                 lat,
                 lon,
                 height,

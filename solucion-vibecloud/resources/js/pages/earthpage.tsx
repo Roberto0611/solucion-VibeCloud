@@ -9,7 +9,7 @@ type HomePageProps = {
 }
 
 const EarthPage: React.FC<HomePageProps> = ({ selectedDataset: propSelectedDataset }) => {
-    const [selectedDataset, setSelectedDataset] = React.useState(propSelectedDataset || '../DatosJSON/csvjson2020.json')
+    const [selectedDataset, setSelectedDataset] = React.useState(propSelectedDataset || "/data/traffic_with_coordinates.json")
     const [markers, setMarkers] = React.useState<any[] | null>(null)
     const [loadingMarkers, setLoadingMarkers] = React.useState(false)
     const [markersError, setMarkersError] = React.useState<string | null>(null)
@@ -26,29 +26,27 @@ const EarthPage: React.FC<HomePageProps> = ({ selectedDataset: propSelectedDatas
         let cancelled = false
         setMarkers(null)
         setMarkersError(null)
-        setLoadingMarkers(true) // Indicamos que estamos cargando
-        try {
-            // Resolve the selectedDataset relative to this module (earthpage) so fetch path is correct
-            const resolved = new URL(selectedDataset, import.meta.url).href
-            console.log('Cargando', selectedDataset, 'Sin error:', resolved)
-            getDensityDescriptors({ url: resolved })
-                .then(list => {
-                    console.log('Cargado, los datos:', list && list.length)
-                    if (!cancelled) setMarkers(list)
-                })
-                .catch(err => {
-                    console.error('Problema cargando descriptores:', err)
-                    if (!cancelled) {
-                        setMarkers([])
-                        setMarkersError(String(err))
-                    }
-                }).finally(() => { if (!cancelled) setLoadingMarkers(false) })
-        } catch (err) {
-            console.error('Problema con la URL del dataset:', err)
-            setMarkers([])
-            setMarkersError(String(err))
-            setLoadingMarkers(false)
-        }
+        setLoadingMarkers(true)
+
+        // Call getDensityDescriptors with the URL
+        getDensityDescriptors({ url: selectedDataset })
+            .then(descriptors => {
+                console.log('Descriptores cargados:', descriptors && descriptors.length)
+                if (!cancelled) {
+                    setMarkers(descriptors);
+                }
+            })
+            .catch(err => {
+                console.error('Problema cargando descriptores:', err)
+                if (!cancelled) {
+                    setMarkers([])
+                    setMarkersError(String(err))
+                }
+            })
+            .finally(() => {
+                if (!cancelled) setLoadingMarkers(false)
+            });
+
         return () => { cancelled = true }
     }, [selectedDataset])
 

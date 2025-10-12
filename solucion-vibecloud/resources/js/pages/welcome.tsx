@@ -11,6 +11,16 @@ import Typewriter from '../hooks/useTypewriter';
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
     const [viewMode, setViewMode] = React.useState<'countries' | 'cities'>('cities');
+    const [selectedDataset, setSelectedDataset] = React.useState('/data/traffic_with_coordinates.json');
+
+    // Update dataset when viewMode changes
+    React.useEffect(() => {
+        if (viewMode === 'cities') {
+            setSelectedDataset('/data/traffic_with_coordinates.json');
+        } else {
+            setSelectedDataset('/data/traffic_by_country_with_coords.json');
+        }
+    }, [viewMode]);
 
     return (
         <>
@@ -141,7 +151,7 @@ export default function Welcome() {
                                     </Button>
                                 </div>
                                 <div className="relative w-full h-[600px] rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900 to-black overflow-hidden">
-                                    <EarthPage />
+                                    <EarthPage selectedDataset={selectedDataset} />
                                 </div>
                             </div>
 

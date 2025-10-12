@@ -12,7 +12,8 @@ import * as THREE from 'three'
 
 type MarkerDescriptor = {
     name?: string,
-    pop?: number,
+    city?: string,
+    delay?: number,
     lat?: number,
     lon?: number,
     height?: number,
@@ -46,9 +47,24 @@ function Marker({ d }: { d: MarkerDescriptor }) {
             <boxGeometry args={[size, size, d.height ?? 0.1]} />
             <meshStandardMaterial color={hovered ? 0xffff66 : 0xff3333} emissive={0x220000} />
             {hovered && (
-                <Html center distanceFactor={5.5} style={{ pointerEvents: 'none' }}>
-                    <div style={{ background: 'rgba(0,0,0,0.8)', color: 'white', padding: '1px 4px', borderRadius: 3, fontSize: 5, whiteSpace: 'nowrap', lineHeight: '12px' }}>
-                        {d.name ?? 'N/A'} · Población: {d.pop ?? 'N/A'}
+                <Html center distanceFactor={3} style={{ pointerEvents: 'none' }}>
+                    <div style={{
+                        background: 'rgba(0,0,0,0.9)',
+                        color: 'white',
+                        padding: '8px 14px',
+                        borderRadius: 8,
+                        fontSize: 10,
+                        whiteSpace: 'nowrap',
+                        lineHeight: '20px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.7)',
+                        fontWeight: '500'
+                    }}>
+                        <div style={{ marginBottom: '4px', fontWeight: '700', textTransform: 'capitalize', fontSize: 16 }}>
+                            {d.city || d.name || 'N/A'}
+                        </div>
+                        <div style={{ fontSize: 13, color: '#fbbf24' }}>
+                            Traffic Delay: {d.delay !== undefined ? `${d.delay.toFixed(2)} mins` : 'N/A'}
+                        </div>
                     </div>
                 </Html>
             )}
