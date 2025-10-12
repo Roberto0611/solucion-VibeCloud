@@ -1,26 +1,30 @@
 <?php
 
+use App\Http\Controllers\AWSController;
 use Illuminate\Support\Facades\Route;
-use Aws\SageMakerRuntime\SageMakerRuntimeClient;
 use Inertia\Inertia;
 
+## landing page
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+# componente de la tierra
 Route::get('/earth', function () {
     return Inertia::render('earthpage');
 })->name('earthpage');
 
+# prueba de json (preguntar si eliminar a Aldo)
 Route::get('/prueba', function () {
     return Inertia::render('prueba');
 })->name('prueba');
 
+# rutas del dashboard (EN UN FUTURO OPTIMIZARLO CON EL CONTROLADOR)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('main', function () {
         return Inertia::render('MainPage');
     })->name('MainPage');
-
+    
     Route::get('/dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
@@ -41,33 +45,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('record');
 });
 
-Route::get('/sm-test', function () {
-    $client = new SageMakerRuntimeClient([
-        'version' => '2017-05-13',
-        'region'  => env('AWS_REGION', 'us-east-1'),
-        // El SDK usará AWS_ACCESS_KEY_ID/SECRET del .env o el perfil por defecto
-        'http'    => ['timeout' => 10, 'connect_timeout' => 3],
-    ]);
+# prueba de aws sagemaker
+Route::get('/sm-test', [AWSController::class, 'smTest'])->name('smTest');
 
-    $payload = [
-        'instances' => [[
-            'pickup_dt_str' => '2024-12-15 08:30:00',
-            'pulocationid'  => 132,
-            'dolocationid'  => 235,
-            'trip_miles'    => 3.2,
-            // 'include_interval' => true,
-        ]],
-    ];
-
-    $res = $client->invokeEndpoint([
-        'EndpointName' => env('SM_ENDPOINT_NAME'),
-        'ContentType'  => 'application/json',
-        'Accept'       => 'application/json',
-        'Body'         => json_encode($payload, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES),
-    ]);
-
-    return response((string) $res->get('Body'), 200)->header('Content-Type', 'application/json');
-});
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
