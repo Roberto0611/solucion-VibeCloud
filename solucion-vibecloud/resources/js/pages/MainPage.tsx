@@ -9,7 +9,6 @@ import ResponsiveTi from './Responsive/ResponsiveTime.tsx/ResponsiveTi';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
-import { log } from 'console';
 
 const breadcrumbs: BreadcrumbItem[] = [
 
@@ -39,10 +38,10 @@ const MainPage = () => {
         console.log('Ubicación to:', selectedLocationTo || 'No seleccionada');
     };
 
-    log('Selected Date:', selectedDate);
-    log('Selected Time:', selectedTime);
-    log('Selected Location From:', selectedLocationFrom);
-    log('Selected Location To:', selectedLocationTo);
+    console.log('Selected Date:', selectedDate);
+    console.log('Selected Time:', selectedTime);
+    console.log('Selected Location From:', selectedLocationFrom);
+    console.log('Selected Location To:', selectedLocationTo);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
