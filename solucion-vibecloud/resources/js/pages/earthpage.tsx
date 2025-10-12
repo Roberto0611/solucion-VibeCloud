@@ -53,13 +53,15 @@ const EarthPage: React.FC<HomePageProps> = ({ selectedDataset: propSelectedDatas
     return (
         <Suspense fallback={null}>
             <div style={{
-                width: '100%',      // Ancho completo del viewport
-                height: '100%',     // Alto completo del viewport
-                display: 'flex',     // Layout flexbox horizontal
-                background: 'black', // Fondo negro espacial
+                width: '100%',
+                height: '100%',
+                maxWidth: '100%',
+                display: 'flex',
+                background: 'black',
+                overflow: 'hidden',
             }}>
 
-                <Canvas>
+                <Canvas style={{ width: '100%', height: '100%' }}>
                     <Suspense fallback={null}>
                         <Earth datasetUrl={selectedDataset} markers={markers ?? []} />
                     </Suspense>

@@ -25,7 +25,7 @@ export default function Welcome() {
     return (
         <>
             <Head title="Welcome to DriveCloud" />
-            <div className="min-h-screen bg-black pb-20">
+            <div className="min-h-screen bg-black pb-20 overflow-x-hidden">
                 <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/80 border-b border-white/10">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text align-middle ">
                         <div className="flex justify-between items-center h-16 p-md-8">
@@ -71,8 +71,8 @@ export default function Welcome() {
                     </div>
                 </header>
 
-                <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-                    <div className="max-w-7xl mx-auto">
+                <section className="pb-20 px-4 sm:px-6 lg:px-8 space-y-10 pt-60">
+                    <div className="max-w-7xl mx-auto  ">
                         <div className="text-center space-y-6">
                             <motion.h1
                                 className="text-5xl md:text-7xl text-white font-bold leading-tight"
@@ -112,8 +112,8 @@ export default function Welcome() {
                 </section>
 
                 {/* Canvas Section - Dividido en dos columnas */}
-                <section className="py-32 px-4 sm:px-6 lg:px-8">
-                    <div className="max-w-7xl mx-auto">
+                <section className="py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+                    <div className="max-w-7xl mx-auto overflow-hidden">
                         {/* Botón de toggle para cambiar entre Countries y Cities */}
                         <motion.div
                             className="flex justify-center mb-8"
@@ -131,7 +131,7 @@ export default function Welcome() {
                             transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
                         >
                             {/* Columna del Canvas */}
-                            <div className="flex flex-col items-center space-y-4 w-full">
+                            <div className="flex flex-col items-center space-y-4 w-full max-w-full">
                                 <div className="inline-flex rounded-lg border border-white/10 bg-black/50 p-1">
                                     <Button
                                         variant={viewMode === 'cities' ? 'default' : 'ghost'}
@@ -150,9 +150,25 @@ export default function Welcome() {
                                         Countries
                                     </Button>
                                 </div>
-                                <div className="relative w-full h-[600px] rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900 to-black overflow-hidden">
+                                <div className="relative w-full max-w-full h-[400px] sm:h-[500px] md:h-[600px] rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900 to-black overflow-hidden">
                                     <EarthPage selectedDataset={selectedDataset} />
                                 </div>
+                                <motion.div
+                                    className="mt-8 text-center"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.8, delay: 1.2 }}
+                                >
+                                    <p className="text-sm text-gray-400 max-w-3xl mx-auto">
+                                        Interactive 3D visualization showing global traffic delays in around 200 cities and 100 countries.
+                                        Use your mouse to rotate and explore the globe (Data obtained via Kaggle in range from September 2024 to January 2025).
+                                    </p>
+                                </motion.div>
+
+
+
+
+
                             </div>
 
 
@@ -177,19 +193,6 @@ export default function Welcome() {
                                     Our intelligent system helps you save time and money on every trip.
                                 </motion.p>
                             </div>
-                        </motion.div>
-
-                        {/* Texto explicativo debajo del canvas */}
-                        <motion.div
-                            className="mt-8 text-center"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 1.2 }}
-                        >
-                            <p className="text-sm text-gray-400 max-w-3xl mx-auto">
-                                Interactive 3D visualization showing global traffic patterns in around 200 cities and 100 countries.
-                                Use your mouse to rotate and explore the globe.
-                            </p>
                         </motion.div>
                     </div>
                 </section>
