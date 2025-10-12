@@ -4,6 +4,8 @@ solucion-vibecloud/python/tests.ipynb
 # Dependencies
 node_modules/
 package-lock.json
+vendor/
+composer.lock
 
 # Environment variables
 .env
