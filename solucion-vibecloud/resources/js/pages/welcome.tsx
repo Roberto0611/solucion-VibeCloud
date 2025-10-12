@@ -5,7 +5,7 @@ import { Cloud, Shield, Zap, Users, Lock, TrendingUp } from 'lucide-react';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import EarthPage from './EarthPage';
+import EarthPage from './earthpage';
 import Typewriter from '../hooks/useTypewriter';
 
 export default function Welcome() {
