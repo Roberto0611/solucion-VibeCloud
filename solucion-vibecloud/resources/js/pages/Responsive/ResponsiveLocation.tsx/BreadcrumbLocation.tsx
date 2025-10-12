@@ -34,9 +34,20 @@ const location = [
         label: "Airport",
     }
 ]
-export function BreadcrumbLocation() {
+type BreadcrumbLocationProps = {
+    onLocationChange?: (location: string) => void
+}
+
+export function BreadcrumbLocation({ onLocationChange }: BreadcrumbLocationProps) {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
+
+    const handleLocationSelect = (currentValue: string) => {
+        const newValue = currentValue === value ? "" : currentValue
+        setValue(newValue)
+        setOpen(false)
+        onLocationChange?.(newValue)
+    }
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -62,10 +73,7 @@ export function BreadcrumbLocation() {
                                 <CommandItem
                                     key={location.value}
                                     value={location.value}
-                                    onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "" : currentValue)
-                                        setOpen(false)
-                                    }}
+                                    onSelect={handleLocationSelect}
                                 >
                                     {location.label}
                                     <Check

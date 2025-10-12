@@ -22,10 +22,28 @@ import {
 import { BreadcrumbTime } from "./Responsive/ResponsiveTime.tsx/BreadcrumbTime"
 import { BreadcrumbLocation } from "./Responsive/ResponsiveLocation.tsx/BreadcrumbLocation"
 
+type Calendar24Props = {
+    onDateChange?: (date: string | undefined) => void;
+}
 
-export function Calendar24() {
+export function Calendar24({ onDateChange }: Calendar24Props) {
     const [open, setOpen] = React.useState(false)
     const [date, setDate] = React.useState<Date | undefined>(undefined)
+
+    const formatDateIso = (d: Date) => {
+        const y = d.getFullYear()
+        const m = String(d.getMonth() + 1).padStart(2, '0')
+        const day = String(d.getDate()).padStart(2, '0')
+        return `${y}-${m}-${day}`
+    }
+
+    const handleDateSelect = (newDate: Date | undefined) => {
+        setDate(newDate);
+        const payload = newDate ? formatDateIso(newDate) : undefined;
+        onDateChange?.(payload);
+        setOpen(false);
+    };
+
     return (
         <div className="flex gap-4">
             <div className="flex flex-col gap-3">
@@ -39,7 +57,7 @@ export function Calendar24() {
                             id="date-picker"
                             className="w-32 justify-between font-normal"
                         >
-                            {date ? date.toLocaleDateString() : "Select date"}
+                            {date ? formatDateIso(date) : "Select date"}
                             <ChevronDownIcon />
                         </Button>
                     </PopoverTrigger>
@@ -48,10 +66,7 @@ export function Calendar24() {
                             mode="single"
                             selected={date}
                             captionLayout="dropdown"
-                            onSelect={(date) => {
-                                setDate(date)
-                                setOpen(false)
-                            }}
+                            onSelect={handleDateSelect}
                         />
                     </PopoverContent>
                 </Popover>

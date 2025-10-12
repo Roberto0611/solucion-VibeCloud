@@ -5,7 +5,7 @@ import { Cloud, Shield, Zap, Users, Lock, TrendingUp } from 'lucide-react';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import EarthPage from './earthpage';
+import EarthPage from './EarthPage';
 import Typewriter from '../hooks/useTypewriter';
 
 export default function Welcome() {
@@ -160,8 +160,8 @@ export default function Welcome() {
                                     transition={{ duration: 0.8, delay: 1.2 }}
                                 >
                                     <p className="text-sm text-gray-400 max-w-3xl mx-auto">
-                                        Interactive 3D visualization showing global traffic delays in around 200 cities and 100 countries.
-                                        Use your mouse to rotate and explore the globe (Data obtained via Kaggle in range from September 2024 to January 2025).
+                                        Interactive 3D visualization showing the average global traffic delays in around 200 cities and 100 countries.
+                                        Use your mouse to rotate and explore the globe (Data obtained via Kaggle in range from September 2024 to January 2025, the negative numbers represents that the delay was lower than the last range).
                                     </p>
                                 </motion.div>
 
