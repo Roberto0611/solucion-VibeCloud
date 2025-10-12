@@ -35,6 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', function () {
         return Inertia::render('ProfilePage');
     })->name('profile');
+    Route::get('/record', function () {
+        return Inertia::render('RecordPage');
+    })->name('record');
 });
 
 require __DIR__.'/settings.php';

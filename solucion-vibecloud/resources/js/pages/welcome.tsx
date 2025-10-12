@@ -2,6 +2,8 @@
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Cloud, Shield, Zap, Users, Lock, TrendingUp } from 'lucide-react';
+import React from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -19,29 +21,25 @@ export default function Welcome() {
                                     DriveCloud
                                 </span>
                             </div>
-
                             <nav className="flex items-center gap-4 bg-black">
                                 {auth.user ? (
-                                    <Link
-                                        href={dashboard()}
-                                        className="inline-flex items-center px-6 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-                                    >
-                                        Dashboard
-                                    </Link>
+                                    <Button asChild variant="default" size="default">
+                                        <Link href={dashboard()}>
+                                            Go to Dashboard
+                                        </Link>
+                                    </Button>
                                 ) : (
                                     <>
-                                        <Link
-                                            href={login()}
-                                            className="inline-flex items-center px-6 py-2 rounded-lg text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
-                                        >
-                                            Log in
-                                        </Link>
-                                        <Link
-                                            href={register()}
-                                            className="inline-flex items-center px-6 py-2 rounded-lg text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
-                                        >
-                                            Register
-                                        </Link>
+                                        <Button asChild variant="ghost" size="default">
+                                            <Link href={login()}>
+                                                Log in
+                                            </Link>
+                                        </Button>
+                                        <Button asChild variant="outline" size="default">
+                                            <Link href={register()}>
+                                                Register
+                                            </Link>
+                                        </Button>
                                     </>
                                 )}
                             </nav>
@@ -51,32 +49,23 @@ export default function Welcome() {
 
                 <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
                     <div className="max-w-7xl mx-auto">
-                        <div className="text-center space-y-8">
+                        <div className="text-center space-y-6">
                             <h1 className="text-5xl text-white font-bold leading-tight">
-                                Your Data, Elevated to the Cloud
+                                Welcome to DriveCloud
                             </h1>
                             <p className="text-lg text-white font-bold leading-tight">
-                                Secure, fast, and intelligent cloud storage solution for modern businesses and individuals.
+                                Create your free account today and experience of saving time and money.
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
                                 {!auth.user && (
                                     <>
-                                        <Link
-                                            href={register()}
-                                            className="inline-flex items-center px-8 py-4 rounded-xl border-2 border-slate-300 dark:border-slate-700 text-white dark:text-slate-300 text-lg font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
-                                        >
-                                            Get Started
-                                        </Link>
+                                        <Button asChild variant="default" size="lg">
+                                            <Link href={register()}>
+                                                Get Started
+                                            </Link>
+                                        </Button>
                                     </>
-                                )}
-                                {auth.user && (
-                                    <Link
-                                        href={dashboard()}
-                                        className="inline-flex items-center px-8 py-4 rounded-xl border-2 border-slate-300 dark:border-slate-700 text-white dark:text-slate-300 text-lg font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
-                                    >
-                                        Go to Dashboard
-                                    </Link>
                                 )}
                             </div>
                         </div>
@@ -90,7 +79,7 @@ export default function Welcome() {
                                 Why Choose DriveCloud?
                             </h2>
                             <p className="text-lg text-white font-bold leading-tight">
-                                Care about your money and time
+                                We care about your money and time, we provide a secure, fast, and intelligent solution giving you the best options for your transportation.
                             </p>
                         </div>
                     </div>
