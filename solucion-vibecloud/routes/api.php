@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\zonesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AWSController;
@@ -16,3 +17,5 @@ use App\Http\Controllers\AWSController;
 */
 
 Route::post('/predict', [AWSController::class, 'predict']);
+Route::get('/getZones', [zonesController::class, 'getZones'])->name('getZones');
+Route::get('/getZones/{id}', [zonesController::class, 'getZoneById'])->name('getZoneById');

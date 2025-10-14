@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AWSController;
+use App\Http\Controllers\CSVImportController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -48,6 +49,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 # prueba de aws sagemaker
 Route::get('/sm-test', [AWSController::class, 'smTest'])->name('smTest');
 
+# cargar csv
+Route::get('/import-csv', [CSVImportController::class, 'import'])->name('import.csv');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
