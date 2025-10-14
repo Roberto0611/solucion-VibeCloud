@@ -17,5 +17,6 @@ use App\Http\Controllers\AWSController;
 */
 
 Route::post('/predict', [AWSController::class, 'predict']);
+Route::post('/predict-test', [AWSController::class, 'predictTest']); // Ruta de prueba
 Route::get('/getZones', [zonesController::class, 'getZones'])->name('getZones');
 Route::get('/getZones/{id}', [zonesController::class, 'getZoneById'])->name('getZoneById');

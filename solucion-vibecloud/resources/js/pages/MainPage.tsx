@@ -20,28 +20,67 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const MainPage = () => {
     const [query, setQuery] = React.useState('');
-    //const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined);
     const [selectedDate, setSelectedDate] = React.useState<string | undefined>(undefined);
     const [selectedTime, setSelectedTime] = React.useState<string | undefined>(undefined);
     const [selectedLocationFrom, setSelectedLocationFrom] = React.useState<string | undefined>(undefined);
     const [selectedLocationTo, setSelectedLocationTo] = React.useState<string | undefined>(undefined);
+    const [loading, setLoading] = React.useState(false);
 
     const handleSendQuery = () => {
         console.log('Query enviado:', query);
     };
 
-    const handleConfirm = () => {
-        console.log('=== Datos de configuración manual ===');
-        console.log('Fecha:', selectedDate ?? 'No seleccionada');
-        console.log('Hora:', selectedTime || 'No seleccionada');
-        console.log('Ubicación from:', selectedLocationFrom || 'No seleccionada');
-        console.log('Ubicación to:', selectedLocationTo || 'No seleccionada');
+    const handleConfirm = async () => {
+        // Validar que tengamos los datos necesarios
+        if (!selectedDate || !selectedTime || !selectedLocationFrom || !selectedLocationTo) {
+            alert('Por favor completa todos los campos');
+            return;
+        }
+
+        const pickupDateTime = `${selectedDate} ${selectedTime}:00`;
+        const payload = {
+            date: pickupDateTime,
+            location_from: selectedLocationFrom,
+            location_to: selectedLocationTo,
+        };
+
+        console.log(' Enviando datos:', payload);
+        setLoading(true);
+
+        try {
+            // Hacer el POST a la ruta de prueba
+            const response = await fetch('/api/predict-test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('Respuesta recibida:', data);
+            
+            // Mostrar predicción en alert
+            alert(`precio: ${data.prediction} dolares`);
+
+        } catch (err) {
+            console.error(' Error:', err);
+            alert('Error al obtener la predicción');
+        } finally {
+            setLoading(false);
+        }
     };
 
-    console.log('Selected Date:', selectedDate);
-    console.log('Selected Time:', selectedTime);
-    console.log('Selected Location From:', selectedLocationFrom);
-    console.log('Selected Location To:', selectedLocationTo);
+    // console.log('Selected Date:', selectedDate);
+    // console.log('Selected Time:', selectedTime);
+    // console.log('Selected Location From:', selectedLocationFrom);
+    // console.log('Selected Location To:', selectedLocationTo);
+
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -110,11 +149,15 @@ const MainPage = () => {
 
                             </div>
                             <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4 pt-6">
-                                <Button className="mt-4 md:mt-0" size="sm" onClick={handleConfirm}>Confirm</Button>
-
+                                <Button 
+                                    className="mt-4 md:mt-0" 
+                                    size="sm" 
+                                    onClick={handleConfirm}
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Procesando...' : 'Confirm'}
+                                </Button>
                             </div>
-
-
                         </div>
 
                     </div>
