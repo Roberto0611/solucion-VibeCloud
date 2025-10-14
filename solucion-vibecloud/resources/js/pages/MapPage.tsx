@@ -115,9 +115,30 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'MapCloud', href: '/map' },
 ]
 
+
+
 export default function MapPage() {
     const [locations, setLocations] = useState<LocationData[]>([])
     const [zones, setZones] = useState<any>(null)
+
+    const [query, setQuery] = React.useState('');
+    //const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined);
+    const [selectedDate, setSelectedDate] = React.useState<string | undefined>(undefined);
+    const [selectedTime, setSelectedTime] = React.useState<string | undefined>(undefined);
+    const [selectedLocationFrom, setSelectedLocationFrom] = React.useState<string | undefined>(undefined);
+    const [selectedLocationTo, setSelectedLocationTo] = React.useState<string | undefined>(undefined);
+
+    const handleSendQuery = () => {
+        console.log('Query enviado:', query);
+    };
+
+    const handleConfirm = () => {
+        console.log('=== Datos de configuración manual ===');
+        console.log('Fecha:', selectedDate ?? 'No seleccionada');
+        console.log('Hora:', selectedTime || 'No seleccionada');
+        console.log('Ubicación from:', selectedLocationFrom || 'No seleccionada');
+        console.log('Ubicación to:', selectedLocationTo || 'No seleccionada');
+    };
 
     useEffect(() => {
         fetch('/data/locations.json')
@@ -169,12 +190,15 @@ export default function MapPage() {
                         <br />
                         <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4">
                             <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4">
-                                <Calendar24 />
-                                <ResponsiveTi />
-                                <ResponsiveLoc />
+                                <Calendar24 onDateChange={setSelectedDate} />
+                                <ResponsiveTi onTimeChange={setSelectedTime} />
+
+                                <ResponsiveLoc label="From" onLocationChange={setSelectedLocationFrom} />
+                                <ResponsiveLoc label="To" onLocationChange={setSelectedLocationTo} />
+
                             </div>
                             <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4 pt-6">
-                                <Button className="mt-4 md:mt-0" size="sm">Confirm</Button>
+                                <Button className="mt-4 md:mt-0" size="sm" onClick={handleConfirm}>Confirm</Button>
                             </div>
                         </div>
                     </div>
