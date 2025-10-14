@@ -122,6 +122,7 @@ export default function MapPage() {
     const [zones, setZones] = useState<any>(null)
 
     const [query, setQuery] = React.useState('');
+    const [isOpen, setIsOpen] = React.useState(false);
     //const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined);
     const [selectedDate, setSelectedDate] = React.useState<string | undefined>(undefined);
     const [selectedTime, setSelectedTime] = React.useState<string | undefined>(undefined);
@@ -199,6 +200,7 @@ export default function MapPage() {
                             </div>
                             <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4 pt-6">
                                 <Button className="mt-4 md:mt-0" size="sm" onClick={handleConfirm}>Confirm</Button>
+
                             </div>
                         </div>
                     </div>
