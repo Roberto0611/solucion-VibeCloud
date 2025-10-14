@@ -23,5 +23,6 @@ sudo apt update
 sudo apt install php8.4-pgsql -y
 npm install @react-three/fiber @react-three/drei three @radix-ui/react-popover cmdk react-day-picker react-resizable-panels
 npm install -D @types/three
+mpm install proj4
 
 composer require aws/aws-sdk-php
