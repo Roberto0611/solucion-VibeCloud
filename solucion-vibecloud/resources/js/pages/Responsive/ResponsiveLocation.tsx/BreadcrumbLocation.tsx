@@ -16,24 +16,16 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-const location = [
-    {
-        value: "manhattan",
-        label: "Manhattan",
-    },
-    {
-        value: "brooklyn",
-        label: "Brooklyn",
-    },
-    {
-        value: "queens",
-        label: "Queens",
-    },
-    {
-        value: "airport",
-        label: "Airport",
-    }
-]
+
+type Zone = {
+    id: number;
+    Borough: string;
+    zone: string;
+    service_zone: string;
+    latitude: string;
+    longitude: string;
+}
+
 type BreadcrumbLocationProps = {
     onLocationChange?: (location: string) => void
 }
@@ -41,6 +33,22 @@ type BreadcrumbLocationProps = {
 export function BreadcrumbLocation({ onLocationChange }: BreadcrumbLocationProps) {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
+    const [zones, setZones] = React.useState<Zone[]>([])
+    const [loading, setLoading] = React.useState(true)
+
+    // Cargar zonas desde la API cuando el componente se monta
+    React.useEffect(() => {
+        fetch('/api/getZones')
+            .then(res => res.json())
+            .then(data => {
+                setZones(data)
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error('Error cargando zonas:', err)
+                setLoading(false)
+            })
+    }, [])
 
     const handleLocationSelect = (currentValue: string) => {
         const newValue = currentValue === value ? "" : currentValue
@@ -48,6 +56,7 @@ export function BreadcrumbLocation({ onLocationChange }: BreadcrumbLocationProps
         setOpen(false)
         onLocationChange?.(newValue)
     }
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -56,30 +65,36 @@ export function BreadcrumbLocation({ onLocationChange }: BreadcrumbLocationProps
                     role="combobox"
                     aria-expanded={open}
                     className="w-[200px] justify-between"
+                    disabled={loading}
                 >
-                    {value
-                        ? location.find((location) => location.value === value)?.label
-                        : "Select location..."}
+                    {loading ? "Loading..." : (
+                        value
+                            ? zones.find((zone) => zone.id.toString() === value)?.zone
+                            : "Select location..."
+                    )}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="w-[300px] p-0">
                 <Command>
                     <CommandInput placeholder="Search location..." className="h-9" />
                     <CommandList>
                         <CommandEmpty>No location found.</CommandEmpty>
                         <CommandGroup>
-                            {location.map((location) => (
+                            {zones.map((zone) => (
                                 <CommandItem
-                                    key={location.value}
-                                    value={location.value}
+                                    key={zone.id}
+                                    value={zone.id.toString()}
                                     onSelect={handleLocationSelect}
                                 >
-                                    {location.label}
+                                    <div className="flex flex-col">
+                                        <span className="font-medium">{zone.zone}</span>
+                                        <span className="text-xs text-muted-foreground">{zone.Borough}</span>
+                                    </div>
                                     <Check
                                         className={cn(
                                             "ml-auto",
-                                            value === location.value ? "opacity-100" : "opacity-0"
+                                            value === zone.id.toString() ? "opacity-100" : "opacity-0"
                                         )}
                                     />
                                 </CommandItem>
