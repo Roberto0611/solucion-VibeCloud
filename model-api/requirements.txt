@@ -1,0 +1,11 @@
+# FastAPI y servidor
+fastapi==0.115.0
+uvicorn[standard]==0.31.0
+pydantic==2.9.2
+
+# Dependencias del modelo
+xgboost==2.1.1
+numpy==1.26.4
+
+# Utilidades
+python-multipart==0.0.12

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Aws\SageMakerRuntime\SageMakerRuntimeClient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class AWSController extends Controller
 {
@@ -66,33 +67,47 @@ class AWSController extends Controller
     }
 
     /**
-     * Método de prueba que simula una predicción
-     * Devuelve un número aleatorio sin llamar a SageMaker
+     * Método de prueba que llama al servidor FastAPI local
+     * Devuelve predicción real del modelo XGBoost
      */
     public function predictTest(Request $request){
-        // Recibir los datos del request
-        $data = $request->all();
-        
-        // Simular un delay como si estuviera procesando
-        sleep(1);
-        
-        // Generar predicción aleatoria (número de taxis entre 10 y 100)
-        $randomPrediction = rand(20, 100);
-        
-        // Simular una respuesta similar a la que daría SageMaker
-        $response = [
-            'success' => true,
-            'prediction' => $randomPrediction,
-            'input_data' => [
-                'date' => $data['date'] ?? null,
-                'location_from' => $data['location_from'] ?? null,
-                'location_to' => $data['location_to'] ?? null,
-            ],
-            'message' => 'Esta es una predicción de prueba. Cambia la ruta a /api/predict para usar el modelo real.',
-            'timestamp' => now()->toIso8601String(),
-        ];
-        
-        return response()->json($response, 200);
+        // Validar los datos del request
+        $validated = $request->validate([
+            'pickup_dt_str' => 'required|string',
+            'pulocationid' => 'required|integer',
+            'dolocationid' => 'required|integer',
+            'trip_miles' => 'required|numeric|min:0',
+        ]);
+
+        try {
+            // URL del servidor FastAPI local
+            $fastApiUrl = env('FASTAPI_URL', 'http://localhost:8001');
+            
+            // Llamar al endpoint de predicción del FastAPI
+            $response = Http::timeout(30)
+                ->post("{$fastApiUrl}/predict", $validated);
+
+            if ($response->successful()) {
+                // Retornar la respuesta del FastAPI directamente
+                return response()->json($response->json(), 200);
+            }
+
+            // Si FastAPI retorna error
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener predicción del modelo',
+                'error' => $response->body()
+            ], $response->status());
+
+        } catch (\Exception $e) {
+            // Error de conexión o timeout
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de conexión con el servicio de predicción',
+                'error' => $e->getMessage(),
+                'hint' => 'Asegúrate de que el servidor FastAPI esté corriendo en ' . env('FASTAPI_URL', 'http://localhost:8001')
+            ], 500);
+        }
     }
 }
 

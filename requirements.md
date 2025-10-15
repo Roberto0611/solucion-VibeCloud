@@ -27,3 +27,7 @@ mpm install proj4
 npm install leaflet-routing-machine
 
 composer require aws/aws-sdk-php
+
+pip install numpy
+pip install xgboost
+pip install fastapi
