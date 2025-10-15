@@ -1,5 +1,3 @@
-
-
 // dependencies
 //npm install react@rc react-dom@rc leaflet
 //npm install react-leaflet@next
@@ -14,13 +12,11 @@ import {
     TileLayer,
     useMap,
     useMapEvent,
-    Circle,
     LayersControl,
     LayerGroup,
     GeoJSON
 } from 'react-leaflet'
 import "leaflet/dist/leaflet.css"
-import "leaflet-routing-machine/dist/leaflet-routing-machine.css"
 import L from 'leaflet'
 
 import proj4 from 'proj4'
@@ -36,6 +32,14 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
+
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 
 interface LocationData {
     lat: number
@@ -176,8 +180,7 @@ export default function MapPage() {
     const [locations, setLocations] = useState<LocationData[]>([])
     const [zones, setZones] = useState<any>(null)
 
-
-    const [isOpen, setIsOpen] = React.useState(false); //Para el hover de horario 
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false) //Para el hover de horario 
 
     const [selectedDate, setSelectedDate] = React.useState<string | undefined>(undefined);
     const [selectedTime, setSelectedTime] = React.useState<string | undefined>(undefined);
@@ -331,14 +334,7 @@ export default function MapPage() {
                                 <ResponsiveLoc label="To" onLocationChange={setSelectedLocationTo} value={selectedLocationTo} />
                             </div>
                             <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4 pt-6">
-                                <Button className="mt-4 md:mt-0" size="sm" onClick={() => {
-                                    handleConfirm()
-                                    // clear selected inputs after confirm as requested
-                                    setSelectedLocationFrom(undefined)
-                                    setSelectedLocationTo(undefined)
-                                    setSelectedDate(undefined)
-                                    setSelectedTime(undefined)
-                                }}>Confirm</Button>
+                                <Button className="mt-4 md:mt-0" size="sm" onClick={() => setIsConfirmModalOpen(true)}>Confirm</Button>
                             </div>
                         </div>
                     </div>
@@ -501,7 +497,68 @@ export default function MapPage() {
                     </div>
                 </ResizablePanel>
             </ResizablePanelGroup>
-        </AppLayout >
+
+            <Dialog open={isConfirmModalOpen} onOpenChange={setIsConfirmModalOpen}>
+                <DialogContent className="sm:max-w-md z-[10000]">
+                    <DialogHeader>
+                        <DialogTitle>Confirm Trip Details</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div className="flex justify-between">
+                            <span className="font-medium">Time:</span>
+                            <span>{selectedTime || 'Not selected'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="font-medium">Date:</span>
+                            <span>{selectedDate || 'Not selected'}</span>
+                        </div>
+                        <div className="flex justify-between">
+
+                            <span className="font-medium">From:</span>
+                            <span>{selectedLocationFrom || 'Not selected'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="font-medium">To:</span>
+                            <span>{selectedLocationTo || 'Not selected'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="font-medium">Distance:</span>
+                            <span>{routeInfo ? `${(routeInfo.distance / 1000).toFixed(2)} km` : 'N/A'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="font-medium">Time:</span>
+                            <span>{routeInfo ? `${Math.round(routeInfo.duration / 60)} min` : 'N/A'}</span>
+                        </div>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="font-medium">Price:</span>
+                        <span>${routeInfo ? 10 : 'N/A'}</span>
+                    </div>
+                    <Button
+                        className="w-full"
+                        onClick={() => {
+                            // Lógica de "Schedule in Calendar" (por ahora, solo loguea y cierra)
+                            console.log('=== Trip Scheduled ===');
+                            console.log('Time:', selectedTime);
+                            console.log('Date:', selectedDate);
+                            console.log('From:', selectedLocationFrom);
+                            console.log('To:', selectedLocationTo);
+                            console.log('Distance:', routeInfo ? `${(routeInfo.distance / 1000).toFixed(2)} km` : 'N/A');
+                            console.log('Price:', routeInfo ? 10 : 'N/A');
+                            // Aquí puedes integrar con calendario real (ej: enviar a API de calendario)
+                            setIsConfirmModalOpen(false)
+                            // Limpiar inputs como antes
+                            setSelectedLocationFrom(undefined)
+                            setSelectedLocationTo(undefined)
+                            setSelectedDate(undefined)
+                            setSelectedTime(undefined)
+                        }}
+                    >
+                        Schedule in Calendar
+                    </Button>
+                </DialogContent>
+            </Dialog>
+        </AppLayout>
     )
 }
 
