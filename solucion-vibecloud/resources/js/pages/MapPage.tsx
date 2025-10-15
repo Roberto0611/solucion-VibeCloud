@@ -552,6 +552,19 @@ export default function MapPage() {
                             setSelectedLocationTo(undefined)
                             setSelectedDate(undefined)
                             setSelectedTime(undefined)
+
+                            const newEvent = {
+                                id: Date.now().toString(),
+                                time: selectedTime || '',
+                                date: selectedDate || '',
+                                distance: routeInfo ? `${(routeInfo.distance / 1000).toFixed(2)} km` : '',
+                                price: routeInfo ? 10 : '',
+                                from: selectedLocationFrom || '',
+                                to: selectedLocationTo || '',
+                            };
+                            const storedEvents = JSON.parse(localStorage.getItem('scheduledEvents') || '[]');
+                            storedEvents.push(newEvent);
+                            localStorage.setItem('scheduledEvents', JSON.stringify(storedEvents));
                         }}
                     >
                         Schedule in Calendar
