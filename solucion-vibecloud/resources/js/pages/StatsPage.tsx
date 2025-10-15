@@ -39,7 +39,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-
+import ResponsiveYear from './Responsive/ResponsiveYear.tsx/ResponsiveYear'
+import ResponsiveMonth from './Responsive/ResponsiveMonth/ResponsiveMonth'
 interface LocationData {
     lat: number
     lon: number
@@ -112,7 +113,8 @@ export default function StatsPage() {
     const [locations, setLocations] = useState<LocationData[]>([])
     const [zones, setZones] = useState<any>(null)
 
-    const [selectedDate, setSelectedDate] = React.useState<string | undefined>(undefined);
+    const [selectedYear, setSelectedYear] = React.useState<string | undefined>(undefined); // Cambiar a selectedYear
+    const [selectedMonth, setSelectedMonth] = React.useState<string | undefined>(undefined);
     const [selectedTime, setSelectedTime] = React.useState<string | undefined>(undefined);
 
     const [selectedFromCoord, setSelectedFromCoord] = useState<[number, number] | null>(null)
@@ -189,12 +191,12 @@ export default function StatsPage() {
             <ResizablePanelGroup direction="horizontal" style={{ height: "100%" }}>
                 <ResizablePanel defaultSize={29}>
                     <div style={{ padding: "20px", height: "100%" }} className='bg-background'>
-                        <h1 style={{ fontSize: "20px", fontWeight: "bold" }} className='text-center'>Explore MapCloud</h1>
+                        <h1 style={{ fontSize: "20px", fontWeight: "bold" }} className='text-center'>StatisticsCloud</h1>
                         <br />
                         <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4">
                             <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4">
-                                <Calendar24 onDateChange={setSelectedDate} />
-                                <ResponsiveTi onTimeChange={setSelectedTime} />
+                                <ResponsiveYear onYearChange={setSelectedYear} value={selectedYear} /> {/* Cambiar onLocationChange por onYearChange, y selectedDate por selectedYear */}
+                                <ResponsiveMonth onMonthChange={setSelectedMonth} value={selectedMonth} />
                             </div>
                             <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4 pt-6">
                                 <Button className="mt-4 md:mt-0" size="sm">Confirm</Button>

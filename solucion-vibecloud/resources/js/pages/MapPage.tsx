@@ -485,7 +485,7 @@ export default function MapPage() {
                             <div style={{ position: 'absolute', left: 12, top: 12, zIndex: 9999 }}>
                                 <div className="bg-background p-3 rounded shadow max-w-sm">
                                     <div className="font-medium">Route summary</div>
-                                    <div className="text-sm">Distance: {(routeInfo.distance / 1000).toFixed(2)} km</div>
+                                    <div className="text-sm">Distance: {((routeInfo.distance / 1000) / 0.62137).toFixed(2)} mi</div>
                                     <div className="text-sm">Duration: {(routeInfo.duration / 60).toFixed(1)} min</div>
                                     <details className="mt-2 text-xs">
                                         <summary>Raw JSON</summary>
