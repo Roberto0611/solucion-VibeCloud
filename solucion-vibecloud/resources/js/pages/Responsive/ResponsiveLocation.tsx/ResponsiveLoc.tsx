@@ -5,15 +5,16 @@ import { BreadcrumbLocation } from './BreadcrumbLocation'
 type ResponsiveLocProps = {
     label?: string
     onLocationChange?: (location: string) => void
+    value?: string
 }
 
-const ResponsiveLoc = ({ label = 'Location', onLocationChange }: ResponsiveLocProps) => {
+const ResponsiveLoc = ({ label = 'Location', onLocationChange, value }: ResponsiveLocProps) => {
     return (
         <div className="flex flex-col gap-3">
             <Label htmlFor="location-picker" className="px-1 text-center">
                 {label}
             </Label>
-            <BreadcrumbLocation onLocationChange={onLocationChange} />
+            <BreadcrumbLocation onLocationChange={onLocationChange} value={value} />
         </div>
     )
 }
