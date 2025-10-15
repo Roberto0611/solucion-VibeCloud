@@ -27,7 +27,7 @@ type Zone = {
 }
 
 type BreadcrumbLocationProps = {
-    onLocationChange?: (location: string) => void
+    onLocationChange?: (locationId: string) => void
     value?: string
 }
 
@@ -57,16 +57,14 @@ export function BreadcrumbLocation({ onLocationChange, value }: BreadcrumbLocati
             })
     }, [])
 
-    // Keep selectedId in sync if parent controls value (value is zone name)
+    // Keep selectedId in sync if parent controls value (value is zone id)
     React.useEffect(() => {
         if (value == null) {
             setSelectedId("")
             return
         }
-        // find zone by name and set selectedId
-        const found = zones.find(z => String(z.zone) === String(value))
-        if (found) setSelectedId(found.id.toString())
-        else setSelectedId("")
+        // value is already the id
+        setSelectedId(String(value))
     }, [value, zones])
 
     React.useEffect(() => {
@@ -79,16 +77,18 @@ export function BreadcrumbLocation({ onLocationChange, value }: BreadcrumbLocati
             setSearch("")
             return
         }
-        setSearch(String(value))
-    }, [value])
+        // value is id, find the zone name to display
+        const zone = zones.find(z => z.id.toString() === String(value))
+        setSearch(zone?.zone ?? "")
+    }, [value, zones])
 
     const handleLocationSelectById = (id: string) => {
         const zone = zones.find(z => z.id.toString() === id)
         const newId = id === selectedId ? "" : id
         setSelectedId(newId)
         setOpen(false)
-        // enviar el nombre de la zona al padre (o cadena vacía si se deselecciona)
-        onLocationChange?.(newId ? (zone?.zone ?? "") : "")
+        // enviar el id de la zona al padre (o cadena vacía si se deselecciona)
+        onLocationChange?.(newId)
     }
 
     const filteredZones = React.useMemo(() => {
@@ -111,8 +111,8 @@ export function BreadcrumbLocation({ onLocationChange, value }: BreadcrumbLocati
                     className="w-[200px] justify-between"
                 >
                     {loading ? "Loading..." : (
-                        // prefer controlled value if provided
-                        value ? value : (
+                        // prefer controlled value if provided, value is id
+                        value ? (zones.find((zone) => zone.id.toString() === value)?.zone ?? value) : (
                             selectedId
                                 ? zones.find((zone) => zone.id.toString() === selectedId)?.zone
                                 : "Select location..."
