@@ -104,21 +104,16 @@ function normalizeGeoJSON(gj: any): any {
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'MapCloud', href: '/map' },
+    { title: 'Stats', href: '/stats' },
 ]
 
-export default function MapPage() {
+export default function StatsPage() {
 
-    const mapboxToken = (import.meta.env.VITE_MAPBOX_TOKEN as string) || "pk.eyJ1IjoiYWxkb2thciIsImEiOiJjbWY5MGllcmUwZDhiMmxxMzVvMHI1dXZyIn0.RA1iYVqkrsZEEqlWoy6foQ"
     const [locations, setLocations] = useState<LocationData[]>([])
     const [zones, setZones] = useState<any>(null)
 
-    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false) //Para el hover de horario 
-
     const [selectedDate, setSelectedDate] = React.useState<string | undefined>(undefined);
     const [selectedTime, setSelectedTime] = React.useState<string | undefined>(undefined);
-    const [selectedLocationFrom, setSelectedLocationFrom] = React.useState<string | undefined>(undefined);
-    const [selectedLocationTo, setSelectedLocationTo] = React.useState<string | undefined>(undefined);
 
     const [selectedFromCoord, setSelectedFromCoord] = useState<[number, number] | null>(null)
     const [selectedToCoord, setSelectedToCoord] = useState<[number, number] | null>(null)
@@ -127,17 +122,6 @@ export default function MapPage() {
     const [pendingRole, setPendingRole] = useState<'from' | 'to' | null>(null)
     const [routeInfo, setRouteInfo] = useState<any | null>(null)
 
-    useEffect(() => {
-        if (!selectedLocationFrom) return
-        const found = locations.find(l => String(l.name) === String(selectedLocationFrom))
-        if (found) setSelectedFromCoord([found.lon, found.lat])
-    }, [selectedLocationFrom, locations])
-
-    useEffect(() => {
-        if (!selectedLocationTo) return
-        const found = locations.find(l => String(l.name) === String(selectedLocationTo))
-        if (found) setSelectedToCoord([found.lon, found.lat])
-    }, [selectedLocationTo, locations])
 
     useEffect(() => {
         fetch('/data/locations.json')
@@ -213,7 +197,7 @@ export default function MapPage() {
                                 <ResponsiveTi onTimeChange={setSelectedTime} />
                             </div>
                             <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4 pt-6">
-                                <Button className="mt-4 md:mt-0" size="sm" onClick={() => setIsConfirmModalOpen(true)}>Confirm</Button>
+                                <Button className="mt-4 md:mt-0" size="sm">Confirm</Button>
                             </div>
                         </div>
                     </div>
