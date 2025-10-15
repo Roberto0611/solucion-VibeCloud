@@ -37,19 +37,22 @@ const MainPage = () => {
             return;
         }
 
-        const pickupDateTime = `${selectedDate} ${selectedTime}:00`;
+        // Formato correcto: "YYYY-MM-DD HH:MM:SS"
+        // selectedTime ya viene en formato "HH:MM:SS" del input type="time"
+        const pickupDateTime = `${selectedDate} ${selectedTime}`;
         const payload = {
-            date: pickupDateTime,
-            location_from: selectedLocationFrom,
-            location_to: selectedLocationTo,
+            pickup_dt_str: pickupDateTime,
+            pulocationid: parseInt(selectedLocationFrom, 10), // Convertir a número
+            dolocationid: parseInt(selectedLocationTo, 10),   // Convertir a número
+            trip_miles: 5.2
         };
 
-        console.log(' Enviando datos:', payload);
+        console.log('✅ Enviando datos:', payload);
         setLoading(true);
 
         try {
-            // Hacer el POST a la ruta de prueba
-            const response = await fetch('/api/predict-test', {
+            // 🧪 Usando endpoint de PRUEBA (cambia a '/api/predict' para usar AWS SageMaker real)
+            const response = await fetch('/api/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,14 +62,20 @@ const MainPage = () => {
             });
 
             if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
+                // Intentar leer el mensaje de error del servidor
+                const errorData = await response.json().catch(() => null);
+                console.error(' Error del servidor:', errorData);
+                throw new Error(`Error ${response.status}: ${errorData?.message || response.statusText}`);
             }
 
             const data = await response.json();
             console.log('Respuesta recibida:', data);
+            console.log('Estructura completa:', JSON.stringify(data, null, 2));
             
             // Mostrar predicción en alert
-            alert(`precio: ${data.prediction} dolares`);
+            // AWS SageMaker generalmente retorna { predictions: [...] }
+            const prediction = data.predictions?.[0] || data.prediction || data;
+            alert(`Precio estimado: $${prediction} dólares`);
 
         } catch (err) {
             console.error(' Error:', err);
