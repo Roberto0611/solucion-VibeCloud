@@ -38,14 +38,22 @@ const CalendarPage = () => {
         localStorage.setItem('scheduledEvents', JSON.stringify(events));
     }, [events]);
 
+    // Función para filtrar eventos (solo próximos)
+    const filteredEvents = events.filter(event => {
+        const eventDateTime = new Date(`${event.date}T${event.time}`);
+        const now = new Date();
+        return eventDateTime >= now; // Solo próximos
+    });
+
     // Ordenar eventos por fecha (más recientes primero)
-    const sortedEvents = events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const sortedEvents = filteredEvents.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Calendar" />
             <div className="p-4">
                 <h1 className="text-2xl font-bold mb-4 pl-1">Agenda de Viajes Programados</h1>
+
                 {sortedEvents.length > 0 ? (
                     <div className="space-y-4">
                         {sortedEvents.map(event => (

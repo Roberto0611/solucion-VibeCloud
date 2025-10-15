@@ -44,6 +44,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/record', function () {
         return Inertia::render('RecordPage');
     })->name('record');
+    Route::get('/stats', function () {
+        return Inertia::render('StatsPage');
+    })->name('stats');
 });
 
 # prueba de aws sagemaker

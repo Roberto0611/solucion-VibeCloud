@@ -13,48 +13,53 @@ import { ChartBarIcon } from 'lucide-react';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 
 const breadcrumbs: BreadcrumbItem[] = [
-
     {
         title: 'Record',
         href: '/record',
     },
 ];
 
+interface Event {
+    id: string;
+    time: string;
+    date: string;
+    distance: string;
+    price: string;
+    from: string;
+    to: string;
+}
+
 const RecordPage = () => {
     const [query, setQuery] = React.useState('');
+    const [events, setEvents] = React.useState<Event[]>([]);
 
-    // Datos de ejemplo del historial de viajes
-    const tripHistory = [
-        {
-            id: 1,
-            origin: 'Brooklyn',
-            destination: 'Manhattan',
-            time: '08:30 AM',
-            date: 'Today',
-            savedMoney: 12.50,
-            savedMinutes: 15,
-        },
-        {
-            id: 2,
-            origin: 'Queens',
-            destination: 'Bronx',
-            time: '02:15 PM',
-            date: 'Yesterday',
-            savedMoney: 8.75,
-            savedMinutes: 22,
-        },
-        {
-            id: 3,
-            origin: 'Staten Island',
-            destination: 'Manhattan',
-            time: '06:45 PM',
-            date: '2 days ago',
-            savedMoney: 15.30,
-            savedMinutes: 18,
-        },
-    ];
+    // Cargar eventos desde localStorage al montar
+    React.useEffect(() => {
+        const storedEvents = localStorage.getItem('scheduledEvents');
+        if (storedEvents) {
+            setEvents(JSON.parse(storedEvents));
+        }
+    }, []);
 
-    // Calcular totales
+    // Función para filtrar eventos (solo pasados)
+    const filteredEvents = events.filter(event => {
+        const eventDateTime = new Date(`${event.date}T${event.time}`);
+        const now = new Date();
+        return eventDateTime < now; // Solo pasados
+    });
+
+    // Mapear eventos a formato de RecordPage (viajes completados)
+    const tripHistory = filteredEvents.map(event => ({
+        id: event.id,
+        origin: event.from,
+        destination: event.to,
+        time: event.time,
+        date: event.date,
+        savedMoney: typeof event.price === 'string' ? parseFloat(event.price.replace('$', '')) : 0, // Check si es string
+        savedMinutes: typeof event.distance === 'string' ? Math.round(parseFloat(event.distance.replace(' km', '')) * 1.5) : 0, // Check si es string
+    }));
+
+    // Calcular totales basados en viajes filtrados
     const totalSavedMoney = tripHistory.reduce((sum, trip) => sum + trip.savedMoney, 0);
     const totalSavedMinutes = tripHistory.reduce((sum, trip) => sum + trip.savedMinutes, 0);
 
@@ -81,7 +86,7 @@ const RecordPage = () => {
                                             {trip.time}
                                         </span>
                                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                                            • {trip.date}
+                                            • {new Date(trip.date).toLocaleDateString()} {/* Formato legible */}
                                         </span>
                                     </div>
                                     <div className="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-medium">
