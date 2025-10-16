@@ -4,8 +4,6 @@
 //npm install -D @types/leaflet
 //npm install proj4
 // npm install --save leaflet-routing-machine
-
-
 import React, { useEffect, useState } from 'react'
 import {
     MapContainer,
@@ -38,7 +36,6 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 
 interface LocationData {
@@ -172,11 +169,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'MapCloud', href: '/map' },
 ]
 
-
-
 export default function MapPage() {
 
-    const mapboxToken = (import.meta.env.VITE_MAPBOX_TOKEN as string) || "pk.eyJ1IjoiYWxkb2thciIsImEiOiJjbWY5MGllcmUwZDhiMmxxMzVvMHI1dXZyIn0.RA1iYVqkrsZEEqlWoy6foQ"
+    const mapboxToken = (import.meta.env.VITE_MAPBOX_TOKEN as string) || "pk.eyJ1IjoiYWxkb2thciIsImEiOiJjbWY5MGllcmUwZDhiMmxxMzVvMHI1dXZyIn0.RA1iYVqkrsZEEqlWoy6foQ" //No es mio asi que no importa si lo usan 
     const [locations, setLocations] = useState<LocationData[]>([])
     const [zones, setZones] = useState<any>(null)
 
@@ -210,46 +205,8 @@ export default function MapPage() {
         if (found) setSelectedToCoord([found.lon, found.lat])
     }, [selectedLocationTo, locations])
 
-    const handleLocationClick = (loc: LocationData) => {
-        // loc: { lat, lon, name }
-        const coord: [number, number] = [loc.lon, loc.lat] // [lng, lat]
-        if (!selectedFromCoord) {
-            setSelectedFromCoord(coord)
-            setSelectedLocationFrom(loc.name)
-            return
-        }
-        if (!selectedToCoord) {
-            // avoid picking same as from
-            const same = selectedFromCoord[0] === coord[0] && selectedFromCoord[1] === coord[1]
-            if (same) {
-                // if same, toggle off
-                setSelectedFromCoord(coord)
-                setSelectedLocationTo(undefined)
-                return
-            }
-            setSelectedToCoord(coord)
-            setSelectedLocationTo(loc.name)
-            return
-        }
-
-        setSelectedFromCoord(coord)
-        setSelectedLocationFrom(loc.name)
-        setSelectedToCoord(null)
-        setSelectedLocationTo(undefined)
-    }
-
-    //Datos que se mandan a la prediccion 
-    const handleConfirm = () => {
-        console.log('=== Datos de configuración manual ===');
-        console.log('Fecha:', selectedDate ?? 'No seleccionada');
-        console.log('Hora:', selectedTime || 'No seleccionada');
-        console.log('Ubicación from:', selectedLocationFrom || 'No seleccionada');
-        console.log('Ubicación to:', selectedLocationTo || 'No seleccionada');
-    };
-
     const fetchPredictedPrice = async () => {
         if (!selectedDate || !selectedTime || !selectedLocationFrom || !selectedLocationTo || !routeInfo?.distance) {
-            console.log('Missing data for price prediction', { selectedDate, selectedTime, selectedLocationFrom, selectedLocationTo, distance: routeInfo?.distance });
             return;
         }
 
@@ -264,8 +221,6 @@ export default function MapPage() {
             dolocationid: parseInt(selectedLocationTo, 10),
             trip_miles: parseFloat(distanceInMiles.toFixed(2))
         };
-
-        console.log('✅ Fetching predicted price with payload:', payload);
         setLoadingPrice(true);
 
         try {
@@ -280,20 +235,16 @@ export default function MapPage() {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => null);
-                console.error('❌ API Error Response:', errorData);
                 throw new Error(`Error ${response.status}: ${errorData?.message || response.statusText}`);
             }
 
             const data = await response.json();
-            console.log('✅ Respuesta recibida:', data);
-            console.log('Estructura completa:', JSON.stringify(data, null, 2));
+
 
             const prediction = data.predictions?.[0] || data.prediction || data;
-            console.log('💰 Predicted price:', prediction);
             setPredictedPrice(prediction);
 
         } catch (err) {
-            console.error('❌ Error fetching predicted price:', err);
             setPredictedPrice(null);
         } finally {
             setLoadingPrice(false);
@@ -417,56 +368,11 @@ export default function MapPage() {
                                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                             />
                             <LayersControl position="topright" >
-                                {/* <LayersControl.Overlay name="Data Points" >
-                                    <LayerGroup>
-                                        {locations.map((location, index) => (
-                                            <Circle
-                                                key={index}
-                                                center={[location.lat, location.lon]}
-                                                radius={200}
-                                                pathOptions={{
-                                                    color: 'green',
-                                                    fillColor: 'green',
-                                                    fillOpacity: 0.6,
-                                                    weight: 1
-                                                }}
-                                                eventHandlers={{
-                                                    click: (ev: L.LeafletMouseEvent) => {
-                                                        // stop the click from bubbling to the map-level click handler
-                                                        try { ev.originalEvent.stopPropagation() } catch (e) { }
-                                                        handleLocationClick(location)
-                                                    }
-                                                }}
-                                            >
-                                            </Circle>
-                                        ))}
-
-                                        {/* mostrar indicadores de From/To 
-                                        {selectedFromCoord && (
-                                            <Circle
-                                                center={[selectedFromCoord[1], selectedFromCoord[0]]}
-                                                radius={80}
-                                                pathOptions={{ color: 'blue', fillColor: 'blue', fillOpacity: 0.7 }}
-                                            />
-                                        )}
-                                        {selectedToCoord && (
-                                            <Circle
-                                                center={[selectedToCoord[1], selectedToCoord[0]]}
-                                                radius={80}
-                                                pathOptions={{ color: 'red', fillColor: 'red', fillOpacity: 0.7 }}
-                                            />
-                                        )}
-                                    </LayerGroup>
-                                </LayersControl.Overlay>
-                                */}
-
-
                                 <LayersControl.Overlay checked name="Taxi Zones (GeoJSON)">
                                     <LayerGroup>
                                         {zones && (
                                             <>
                                                 <GeoJSON data={zones} style={zoneStyle} onEachFeature={(f, layer) => onEachZone(f, layer)} />
-                                                {/* <FitToGeoJson geo={zones} /> */}
                                             </>
                                         )}
                                         {!zones && <div style={{ padding: 8, color: '#fff' }}>Cargando polígonos...</div>}
@@ -549,17 +455,13 @@ export default function MapPage() {
                             </div>
                         )}
 
-                        {/* Route info panel */}
+                        {/* Panel de informacion */}
                         {routeInfo && (
                             <div style={{ position: 'absolute', left: 12, top: 12, zIndex: 9999 }}>
                                 <div className="bg-background p-3 rounded shadow max-w-sm">
                                     <div className="font-medium">Route summary</div>
                                     <div className="text-sm">Distance: {((routeInfo.distance / 1000) / 0.62137).toFixed(2)} mi</div>
                                     <div className="text-sm">Duration: {(routeInfo.duration / 60).toFixed(1)} min</div>
-                                    <details className="mt-2 text-xs">
-                                        <summary>Raw JSON</summary>
-                                        <pre className="text-xs overflow-auto" style={{ maxHeight: 200 }}>{JSON.stringify(routeInfo, null, 2)}</pre>
-                                    </details>
                                 </div>
                             </div>
                         )}
@@ -608,17 +510,11 @@ export default function MapPage() {
                     <Button
                         className="w-full"
                         onClick={() => {
-                            // Lógica de "Schedule in Calendar" (por ahora, solo loguea y cierra)
-                            console.log('=== Trip Scheduled ===');
-                            console.log('Time:', selectedTime);
-                            console.log('Date:', selectedDate);
-                            console.log('From:', selectedLocationFromName, '(ID:', selectedLocationFrom, ')');
-                            console.log('To:', selectedLocationToName, '(ID:', selectedLocationTo, ')');
-                            console.log('Distance:', routeInfo ? `${((routeInfo.distance / 1000) / 1.60934).toFixed(2)} mi` : 'N/A');
-                            console.log('Price:', predictedPrice !== null ? `$${predictedPrice.toFixed(2)}` : 'N/A');
-                            // Aquí puedes integrar con calendario real (ej: enviar a API de calendario)
+
+                            // Cerrar el hover
                             setIsConfirmModalOpen(false)
-                            // Limpiar inputs como antes
+
+                            // Limpiar inputs 
                             setSelectedLocationFrom(undefined)
                             setSelectedLocationTo(undefined)
                             setSelectedLocationFromName(undefined)
@@ -626,6 +522,7 @@ export default function MapPage() {
                             setSelectedDate(undefined)
                             setSelectedTime(undefined)
 
+                            //Crear shedule
                             const newEvent = {
                                 id: Date.now().toString(),
                                 time: selectedTime || '',
@@ -635,6 +532,8 @@ export default function MapPage() {
                                 from: selectedLocationFromName || '',
                                 to: selectedLocationToName || '',
                             };
+
+                            //Almacenarlo en Local Storage
                             const storedEvents = JSON.parse(localStorage.getItem('scheduledEvents') || '[]');
                             storedEvents.push(newEvent);
                             localStorage.setItem('scheduledEvents', JSON.stringify(storedEvents));
