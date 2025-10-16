@@ -35,9 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/map', function () {
         return Inertia::render('MapPage');
     })->name('map');
-    Route::get('/charts', function () {
-        return Inertia::render('ChartsPage');
-    })->name('charts');
+    Route::get('/download', function () {
+        return Inertia::render('DownloadPage');
+    })->name('download');
     Route::get('/profile', function () {
         return Inertia::render('ProfilePage');
     })->name('profile');

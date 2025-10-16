@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Cloud, Calendar, Map, ChartAreaIcon, Timer, ChartBarIcon } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Cloud, Calendar, Map, ChartAreaIcon, Timer, DownloadCloudIcon } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -43,15 +43,15 @@ const mainNavItems: NavItem[] = [
         icon: Timer,
     },
     {
-        title: 'Charts',
-        href: '/charts',
-        icon: ChartBarIcon,
-    },
-    {
         title: 'Stats',
         href: '/stats',
         icon: ChartAreaIcon,
     },
+    {
+        title: 'Download',
+        href: '/download',
+        icon: DownloadCloudIcon,
+    }
 ];
 
 
