@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Aws\Athena\AthenaClient;
 use Aws\SageMakerRuntime\SageMakerRuntimeClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -10,11 +11,11 @@ class AWSController extends Controller
 {
     public function smTest(){
         $client = new SageMakerRuntimeClient([
-        'version' => '2017-05-13',
-        'region'  => env('AWS_REGION', 'us-east-1'),
-        // El SDK usará AWS_ACCESS_KEY_ID/SECRET del .env o el perfil por defecto
-        'http'    => ['timeout' => 10, 'connect_timeout' => 3],
-    ]);
+            'version' => '2017-05-13',
+            'region'  => env('AWS_REGION', 'us-east-1'),
+            'profile' => env('AWS_PROFILE', 'superlab_IsbUsersPS-866486457015'), // Usar perfil SSO
+            'http'    => ['timeout' => 10, 'connect_timeout' => 3],
+        ]);
 
     $payload = [
         'instances' => [[
@@ -131,6 +132,129 @@ class AWSController extends Controller
         Log::info('✅ Respuesta de predictTest:', $response);
         
         return response()->json($response, 200);
+    }
+
+    // obtener los datos desde athena
+    public function averagePerZoneDoLocation($year, $month){
+        $client = new AthenaClient([
+            'version' => 'latest',
+            'region' => 'us-east-1',
+            'credentials' => [
+                'key' => env('AWS_ACCESS_KEY_ID'),
+                'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                'token' => env('AWS_SESSION_TOKEN'),
+            ],
+        ]);
+
+        // consulta
+        $result = $client->startQueryExecution([
+            'QueryString' => "SELECT dolocationid, AVG(driver_pay) as promedio_pago
+                                FROM \"nyc_taxi\".\"fhvhv\" 
+                                WHERE year = $year AND month = $month
+                                GROUP BY dolocationid
+                                ORDER BY promedio_pago DESC",
+            'QueryExecutionContext' => [
+                'Database' => 'nyc_taxi',
+            ],
+            'ResultConfiguration' => [
+                'OutputLocation' => 's3://aws-athena-query-results-us-east-1-866486457015/results/',
+            ],
+        ]);
+        $queryExecutionId = $result['QueryExecutionId'];
+
+        // esperar a que termine la consulta
+        do {
+            sleep(2);
+            $status = $client->getQueryExecution([
+                'QueryExecutionId' => $queryExecutionId,
+            ]);
+            $state = $status['QueryExecution']['Status']['State'];
+        } while (in_array($state, ['QUEUED', 'RUNNING']));
+
+        // resultados
+        if ($state == 'SUCCEEDED') {
+            $results = $client->getQueryResults([
+                'QueryExecutionId' => $queryExecutionId,
+            ]);
+
+            // Procesar y formatear los resultados
+            $formattedResults = $this->formatAthenaResults($results['ResultSet']['Rows']);
+
+            // Retornar los resultados formateados
+            return response()->json($formattedResults);
+        } else {
+            return response()->json(['error' => 'Athena query failed: ' . $state]);
+        }
+    }
+
+    // obtener datos pero para pull location
+    public function averagePerZonePuLocation($year, $month){
+        $client = new AthenaClient([
+            'version' => 'latest',
+            'region' => 'us-east-1',
+            'credentials' => [
+                'key' => env('AWS_ACCESS_KEY_ID'),
+                'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                'token' => env('AWS_SESSION_TOKEN'),
+            ],
+        ]);
+
+        // consulta
+        $result = $client->startQueryExecution([
+            'QueryString' => "SELECT pulocationid, AVG(driver_pay) as promedio_pago
+                                FROM \"nyc_taxi\".\"fhvhv\" 
+                                WHERE year = $year AND month = $month
+                                GROUP BY pulocationid
+                                ORDER BY promedio_pago DESC",
+            'QueryExecutionContext' => [
+                'Database' => 'nyc_taxi',
+            ],
+            'ResultConfiguration' => [
+                'OutputLocation' => 's3://aws-athena-query-results-us-east-1-866486457015/results/',
+            ],
+        ]);
+        $queryExecutionId = $result['QueryExecutionId'];
+
+        // esperar a que termine la consulta
+        do {
+            sleep(2);
+            $status = $client->getQueryExecution([
+                'QueryExecutionId' => $queryExecutionId,
+            ]);
+            $state = $status['QueryExecution']['Status']['State'];
+        } while (in_array($state, ['QUEUED', 'RUNNING']));
+
+        // resultados
+        if ($state == 'SUCCEEDED') {
+            $results = $client->getQueryResults([
+                'QueryExecutionId' => $queryExecutionId,
+            ]);
+
+            // Procesar y formatear los resultados
+            $formattedResults = $this->formatAthenaResults($results['ResultSet']['Rows']);
+
+            // Retornar los resultados formateados
+            return response()->json($formattedResults);
+        } else {
+            return response()->json(['error' => 'Athena query failed: ' . $state]);
+        }
+    }
+
+    // Función para formatear los resultados de Athena
+    private function formatAthenaResults($rows) {
+        $formatted = [];
+        
+        // Saltar la primera fila (cabeceras)
+        for ($i = 1; $i < count($rows); $i++) {
+            $row = $rows[$i];
+            
+            $formatted[] = [
+                'dolocationid' => $row['Data'][0]['VarCharValue'],
+                'promedio_pago' => (float) $row['Data'][1]['VarCharValue']
+            ];
+        }
+        
+        return $formatted;
     }
 }
 

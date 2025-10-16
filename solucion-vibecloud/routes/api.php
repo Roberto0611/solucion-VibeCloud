@@ -20,3 +20,7 @@ Route::post('/predict', [AWSController::class, 'predict']);
 Route::post('/predict-test', [AWSController::class, 'predictTest']); // Ruta de prueba sin AWS
 Route::get('/getZones', [zonesController::class, 'getZones'])->name('getZones');
 Route::get('/getZones/{id}', [zonesController::class, 'getZoneById'])->name('getZoneById');
+
+// rutas para obtener datos historicos
+Route::get('/getPriceAverageDo/{year}/{month}', [AWSController::class, 'averagePerZoneDoLocation'])->name('getHistoricalDataDo');
+Route::get('/getPriceAveragePu/{year}/{month}', [AWSController::class, 'averagePerZonePuLocation'])->name('getHistoricalDataPu');
