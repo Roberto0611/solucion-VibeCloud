@@ -4,13 +4,10 @@
 //npm install -D @types/leaflet
 //npm install proj4
 // npm install --save leaflet-routing-machine
-
 import React, { useEffect, useState } from 'react'
 import {
     MapContainer,
     TileLayer,
-    useMap,
-    useMapEvent,
     LayersControl,
     LayerGroup,
     GeoJSON
@@ -22,23 +19,13 @@ import proj4 from 'proj4'
 import AppLayout from '@/layouts/app-layout'
 import { Head } from '@inertiajs/react'
 import { type BreadcrumbItem } from '@/types'
-import ResponsiveLoc from './Responsive/ResponsiveLocation.tsx/ResponsiveLoc'
-import ResponsiveTi from './Responsive/ResponsiveTime.tsx/ResponsiveTi'
 import { Button } from '@/components/ui/button'
-import { Calendar24 } from './CalendarPrime'
 import {
     ResizableHandle,
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
 
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
 import ResponsiveYear from './Responsive/ResponsiveYear.tsx/ResponsiveYear'
 import ResponsiveMonth from './Responsive/ResponsiveMonth/ResponsiveMonth'
 interface LocationData {
@@ -115,15 +102,6 @@ export default function StatsPage() {
 
     const [selectedYear, setSelectedYear] = React.useState<string | undefined>(undefined); // Cambiar a selectedYear
     const [selectedMonth, setSelectedMonth] = React.useState<string | undefined>(undefined);
-    const [selectedTime, setSelectedTime] = React.useState<string | undefined>(undefined);
-
-    const [selectedFromCoord, setSelectedFromCoord] = useState<[number, number] | null>(null)
-    const [selectedToCoord, setSelectedToCoord] = useState<[number, number] | null>(null)
-    const [routeRequested, setRouteRequested] = useState(false)
-    const [pendingSelection, setPendingSelection] = useState<{ coord: [number, number]; name?: string; bounds?: L.LatLngBounds } | null>(null)
-    const [pendingRole, setPendingRole] = useState<'from' | 'to' | null>(null)
-    const [routeInfo, setRouteInfo] = useState<any | null>(null)
-
 
     useEffect(() => {
         fetch('/data/locations.json')
@@ -162,27 +140,10 @@ export default function StatsPage() {
         try {
             ; (layer as any).on('click', (e: any) => {
                 try { e.originalEvent.stopPropagation() } catch (err) { }
-                const lat = e.latlng?.lat
-                const lng = e.latlng?.lng
-                const bounds = (layer as any).getBounds ? (layer as any).getBounds() : undefined
-                const mapRef = (layer as any)._map ?? undefined
-                console.log('Zone clicked:', name, 'at', [lng, lat], 'bounds:', !!bounds)
-                // Quitar zoom: // try { if (bounds && mapRef) mapRef.fitBounds(bounds, { padding: [20, 20] }) } catch (err) { }
-                handleZoneClick(feature, [lng, lat], bounds, mapRef)
             })
         } catch (err) {
             // ignore if layer doesn't support events
         }
-    }
-
-    const handleZoneClick = (feature: any, coord: [number, number], bounds?: L.LatLngBounds, mapRef?: L.Map) => {
-        // instead of immediately assigning, set a pending selection and zoom to the zone
-        const name = feature?.properties?.zone || feature?.properties?.zone_name || 'Zone'
-        const role: 'from' | 'to' = !selectedFromCoord ? 'from' : 'to'
-        setPendingSelection({ coord, name, bounds })
-        setPendingRole(role)
-        console.log('Pending selection for', role, name, coord, 'current FROM:', selectedFromCoord, 'TO:', selectedToCoord)
-        // Quitar zoom: // try { if (bounds && mapRef) mapRef.fitBounds(bounds, { padding: [20, 20] }) else if (bounds) { // try to find map via bounds object // no-op } } catch (e) { }
     }
 
     return (
@@ -223,16 +184,13 @@ export default function StatsPage() {
                                         {zones && (
                                             <>
                                                 <GeoJSON data={zones} style={zoneStyle} onEachFeature={(f, layer) => onEachZone(f, layer)} />
-                                                {/* <FitToGeoJson geo={zones} /> */}
                                             </>
                                         )}
                                         {!zones && <div style={{ padding: 8, color: '#fff' }}>Cargando polígonos...</div>}
                                     </LayerGroup>
                                 </LayersControl.Overlay>
                             </LayersControl>
-
                         </MapContainer>
-
                     </div>
                 </ResizablePanel>
             </ResizablePanelGroup>

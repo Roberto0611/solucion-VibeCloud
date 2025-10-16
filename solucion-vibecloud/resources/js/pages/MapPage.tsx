@@ -4,8 +4,6 @@
 //npm install -D @types/leaflet
 //npm install proj4
 // npm install --save leaflet-routing-machine
-
-
 import React, { useEffect, useState } from 'react'
 import {
     MapContainer,
@@ -38,7 +36,6 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 
 interface LocationData {
@@ -172,11 +169,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'MapCloud', href: '/map' },
 ]
 
-
-
 export default function MapPage() {
 
-    const mapboxToken = (import.meta.env.VITE_MAPBOX_TOKEN as string) || "pk.eyJ1IjoiYWxkb2thciIsImEiOiJjbWY5MGllcmUwZDhiMmxxMzVvMHI1dXZyIn0.RA1iYVqkrsZEEqlWoy6foQ"
+    const mapboxToken = (import.meta.env.VITE_MAPBOX_TOKEN as string) || "pk.eyJ1IjoiYWxkb2thciIsImEiOiJjbWY5MGllcmUwZDhiMmxxMzVvMHI1dXZyIn0.RA1iYVqkrsZEEqlWoy6foQ" //No es mio asi que no importa si lo usan 
     const [locations, setLocations] = useState<LocationData[]>([])
     const [zones, setZones] = useState<any>(null)
 
@@ -186,13 +181,17 @@ export default function MapPage() {
     const [selectedTime, setSelectedTime] = React.useState<string | undefined>(undefined);
     const [selectedLocationFrom, setSelectedLocationFrom] = React.useState<string | undefined>(undefined);
     const [selectedLocationTo, setSelectedLocationTo] = React.useState<string | undefined>(undefined);
+    const [selectedLocationFromName, setSelectedLocationFromName] = React.useState<string | undefined>(undefined);
+    const [selectedLocationToName, setSelectedLocationToName] = React.useState<string | undefined>(undefined);
 
     const [selectedFromCoord, setSelectedFromCoord] = useState<[number, number] | null>(null)
     const [selectedToCoord, setSelectedToCoord] = useState<[number, number] | null>(null)
     const [routeRequested, setRouteRequested] = useState(false)
-    const [pendingSelection, setPendingSelection] = useState<{ coord: [number, number]; name?: string; bounds?: L.LatLngBounds } | null>(null)
+    const [pendingSelection, setPendingSelection] = useState<{ coord: [number, number]; name?: string; locationId?: string; bounds?: L.LatLngBounds } | null>(null)
     const [pendingRole, setPendingRole] = useState<'from' | 'to' | null>(null)
     const [routeInfo, setRouteInfo] = useState<any | null>(null)
+    const [predictedPrice, setPredictedPrice] = useState<number | null>(null)
+    const [loadingPrice, setLoadingPrice] = useState(false)
 
     useEffect(() => {
         if (!selectedLocationFrom) return
@@ -206,42 +205,58 @@ export default function MapPage() {
         if (found) setSelectedToCoord([found.lon, found.lat])
     }, [selectedLocationTo, locations])
 
-    const handleLocationClick = (loc: LocationData) => {
-        // loc: { lat, lon, name }
-        const coord: [number, number] = [loc.lon, loc.lat] // [lng, lat]
-        if (!selectedFromCoord) {
-            setSelectedFromCoord(coord)
-            setSelectedLocationFrom(loc.name)
-            return
+    const fetchPredictedPrice = async () => {
+        if (!selectedDate || !selectedTime || !selectedLocationFrom || !selectedLocationTo || !routeInfo?.distance) {
+            return;
         }
-        if (!selectedToCoord) {
-            // avoid picking same as from
-            const same = selectedFromCoord[0] === coord[0] && selectedFromCoord[1] === coord[1]
-            if (same) {
-                // if same, toggle off
-                setSelectedFromCoord(coord)
-                setSelectedLocationTo(undefined)
-                return
+
+        // Convertir distancia de metros a millas
+        const distanceInMeters = routeInfo.distance;
+        const distanceInMiles = (distanceInMeters / 1000) / 1.60934; // metros -> km -> millas
+
+        const pickupDateTime = `${selectedDate} ${selectedTime}`;
+        const payload = {
+            pickup_dt_str: pickupDateTime,
+            pulocationid: parseInt(selectedLocationFrom, 10),
+            dolocationid: parseInt(selectedLocationTo, 10),
+            trip_miles: parseFloat(distanceInMiles.toFixed(2))
+        };
+        setLoadingPrice(true);
+
+        try {
+            const response = await fetch('/api/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => null);
+                throw new Error(`Error ${response.status}: ${errorData?.message || response.statusText}`);
             }
-            setSelectedToCoord(coord)
-            setSelectedLocationTo(loc.name)
-            return
+
+            const data = await response.json();
+
+
+            const prediction = data.predictions?.[0] || data.prediction || data;
+            setPredictedPrice(prediction);
+
+        } catch (err) {
+            setPredictedPrice(null);
+        } finally {
+            setLoadingPrice(false);
         }
-
-        setSelectedFromCoord(coord)
-        setSelectedLocationFrom(loc.name)
-        setSelectedToCoord(null)
-        setSelectedLocationTo(undefined)
-    }
-
-    //Datos que se mandan a la prediccion 
-    const handleConfirm = () => {
-        console.log('=== Datos de configuración manual ===');
-        console.log('Fecha:', selectedDate ?? 'No seleccionada');
-        console.log('Hora:', selectedTime || 'No seleccionada');
-        console.log('Ubicación from:', selectedLocationFrom || 'No seleccionada');
-        console.log('Ubicación to:', selectedLocationTo || 'No seleccionada');
     };
+
+    // Fetch price when dialog opens and we have all required data including route distance
+    useEffect(() => {
+        if (isConfirmModalOpen && selectedDate && selectedTime && selectedLocationFrom && selectedLocationTo && routeInfo?.distance) {
+            fetchPredictedPrice();
+        }
+    }, [isConfirmModalOpen, selectedDate, selectedTime, selectedLocationFrom, selectedLocationTo, routeInfo]);
 
     useEffect(() => {
         fetch('/data/locations.json')
@@ -304,10 +319,11 @@ export default function MapPage() {
     const handleZoneClick = (feature: any, coord: [number, number], bounds?: L.LatLngBounds, mapRef?: L.Map) => {
         // instead of immediately assigning, set a pending selection and zoom to the zone
         const name = feature?.properties?.zone || feature?.properties?.zone_name || 'Zone'
+        const locationId = feature?.properties?.LocationID || feature?.properties?.location_id || feature?.properties?.OBJECTID
         const role: 'from' | 'to' = !selectedFromCoord ? 'from' : 'to'
-        setPendingSelection({ coord, name, bounds })
+        setPendingSelection({ coord, name, locationId: String(locationId), bounds })
         setPendingRole(role)
-        console.log('Pending selection for', role, name, coord, 'current FROM:', selectedFromCoord, 'TO:', selectedToCoord)
+        console.log('Pending selection for', role, name, 'LocationID:', locationId, 'coord:', coord, 'current FROM:', selectedFromCoord, 'TO:', selectedToCoord)
         // zoom to bounds if available
         try {
             if (bounds && mapRef) mapRef.fitBounds(bounds, { padding: [20, 20] })
@@ -352,56 +368,11 @@ export default function MapPage() {
                                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                             />
                             <LayersControl position="topright" >
-                                {/* <LayersControl.Overlay name="Data Points" >
-                                    <LayerGroup>
-                                        {locations.map((location, index) => (
-                                            <Circle
-                                                key={index}
-                                                center={[location.lat, location.lon]}
-                                                radius={200}
-                                                pathOptions={{
-                                                    color: 'green',
-                                                    fillColor: 'green',
-                                                    fillOpacity: 0.6,
-                                                    weight: 1
-                                                }}
-                                                eventHandlers={{
-                                                    click: (ev: L.LeafletMouseEvent) => {
-                                                        // stop the click from bubbling to the map-level click handler
-                                                        try { ev.originalEvent.stopPropagation() } catch (e) { }
-                                                        handleLocationClick(location)
-                                                    }
-                                                }}
-                                            >
-                                            </Circle>
-                                        ))}
-
-                                        {/* mostrar indicadores de From/To 
-                                        {selectedFromCoord && (
-                                            <Circle
-                                                center={[selectedFromCoord[1], selectedFromCoord[0]]}
-                                                radius={80}
-                                                pathOptions={{ color: 'blue', fillColor: 'blue', fillOpacity: 0.7 }}
-                                            />
-                                        )}
-                                        {selectedToCoord && (
-                                            <Circle
-                                                center={[selectedToCoord[1], selectedToCoord[0]]}
-                                                radius={80}
-                                                pathOptions={{ color: 'red', fillColor: 'red', fillOpacity: 0.7 }}
-                                            />
-                                        )}
-                                    </LayerGroup>
-                                </LayersControl.Overlay>
-                                */}
-
-
                                 <LayersControl.Overlay checked name="Taxi Zones (GeoJSON)">
                                     <LayerGroup>
                                         {zones && (
                                             <>
                                                 <GeoJSON data={zones} style={zoneStyle} onEachFeature={(f, layer) => onEachZone(f, layer)} />
-                                                {/* <FitToGeoJson geo={zones} /> */}
                                             </>
                                         )}
                                         {!zones && <div style={{ padding: 8, color: '#fff' }}>Cargando polígonos...</div>}
@@ -448,14 +419,18 @@ export default function MapPage() {
 
                                             if (effectiveRole === 'from') {
                                                 setSelectedFromCoord(pendingSelection.coord)
+                                                const idToSet = pendingSelection.locationId ?? coordLabel
                                                 const nameToSet = pendingSelection.name ?? coordLabel
-                                                console.log('Setting selectedLocationFrom ->', nameToSet)
-                                                setSelectedLocationFrom(nameToSet)
+                                                console.log('Setting selectedLocationFrom ->', idToSet, '(LocationID)', 'name:', nameToSet)
+                                                setSelectedLocationFrom(idToSet)
+                                                setSelectedLocationFromName(nameToSet)
                                             } else {
                                                 setSelectedToCoord(pendingSelection.coord)
+                                                const idToSet = pendingSelection.locationId ?? coordLabel
                                                 const nameToSet = pendingSelection.name ?? coordLabel
-                                                console.log('Setting selectedLocationTo ->', nameToSet)
-                                                setSelectedLocationTo(nameToSet)
+                                                console.log('Setting selectedLocationTo ->', idToSet, '(LocationID)', 'name:', nameToSet)
+                                                setSelectedLocationTo(idToSet)
+                                                setSelectedLocationToName(nameToSet)
                                             }
 
                                             // clear pending
@@ -480,17 +455,13 @@ export default function MapPage() {
                             </div>
                         )}
 
-                        {/* Route info panel */}
+                        {/* Panel de informacion */}
                         {routeInfo && (
                             <div style={{ position: 'absolute', left: 12, top: 12, zIndex: 9999 }}>
                                 <div className="bg-background p-3 rounded shadow max-w-sm">
                                     <div className="font-medium">Route summary</div>
                                     <div className="text-sm">Distance: {((routeInfo.distance / 1000) / 0.62137).toFixed(2)} mi</div>
                                     <div className="text-sm">Duration: {(routeInfo.duration / 60).toFixed(1)} min</div>
-                                    <details className="mt-2 text-xs">
-                                        <summary>Raw JSON</summary>
-                                        <pre className="text-xs overflow-auto" style={{ maxHeight: 200 }}>{JSON.stringify(routeInfo, null, 2)}</pre>
-                                    </details>
                                 </div>
                             </div>
                         )}
@@ -515,15 +486,15 @@ export default function MapPage() {
                         <div className="flex justify-between">
 
                             <span className="font-medium">From:</span>
-                            <span>{selectedLocationFrom || 'Not selected'}</span>
+                            <span>{selectedLocationFromName || 'Not selected'}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="font-medium">To:</span>
-                            <span>{selectedLocationTo || 'Not selected'}</span>
+                            <span>{selectedLocationToName || 'Not selected'}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="font-medium">Distance:</span>
-                            <span>{routeInfo ? `${(routeInfo.distance / 1000).toFixed(2)} km` : 'N/A'}</span>
+                            <span>{routeInfo ? `${((routeInfo.distance / 1000) / 1.60934).toFixed(2)} mi` : 'N/A'}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="font-medium">Time:</span>
@@ -532,36 +503,37 @@ export default function MapPage() {
                     </div>
                     <div className="flex justify-between">
                         <span className="font-medium">Price:</span>
-                        <span>${routeInfo ? 10 : 'N/A'}</span>
+                        <span>
+                            {loadingPrice ? 'Loading...' : (predictedPrice !== null ? `$${predictedPrice.toFixed(2)}` : 'N/A')}
+                        </span>
                     </div>
                     <Button
                         className="w-full"
                         onClick={() => {
-                            // Lógica de "Schedule in Calendar" (por ahora, solo loguea y cierra)
-                            console.log('=== Trip Scheduled ===');
-                            console.log('Time:', selectedTime);
-                            console.log('Date:', selectedDate);
-                            console.log('From:', selectedLocationFrom);
-                            console.log('To:', selectedLocationTo);
-                            console.log('Distance:', routeInfo ? `${(routeInfo.distance / 1000).toFixed(2)} km` : 'N/A');
-                            console.log('Price:', routeInfo ? 10 : 'N/A');
-                            // Aquí puedes integrar con calendario real (ej: enviar a API de calendario)
+
+                            // Cerrar el hover
                             setIsConfirmModalOpen(false)
-                            // Limpiar inputs como antes
+
+                            // Limpiar inputs 
                             setSelectedLocationFrom(undefined)
                             setSelectedLocationTo(undefined)
+                            setSelectedLocationFromName(undefined)
+                            setSelectedLocationToName(undefined)
                             setSelectedDate(undefined)
                             setSelectedTime(undefined)
 
+                            //Crear shedule
                             const newEvent = {
                                 id: Date.now().toString(),
                                 time: selectedTime || '',
                                 date: selectedDate || '',
-                                distance: routeInfo ? `${(routeInfo.distance / 1000).toFixed(2)} km` : '',
-                                price: routeInfo ? 10 : '',
-                                from: selectedLocationFrom || '',
-                                to: selectedLocationTo || '',
+                                distance: routeInfo ? `${((routeInfo.distance / 1000) / 1.60934).toFixed(2)} mi` : '',
+                                price: predictedPrice !== null ? `${predictedPrice.toFixed(2)}` : '',
+                                from: selectedLocationFromName || '',
+                                to: selectedLocationToName || '',
                             };
+
+                            //Almacenarlo en Local Storage
                             const storedEvents = JSON.parse(localStorage.getItem('scheduledEvents') || '[]');
                             storedEvents.push(newEvent);
                             localStorage.setItem('scheduledEvents', JSON.stringify(storedEvents));
