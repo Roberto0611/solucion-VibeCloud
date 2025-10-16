@@ -186,13 +186,17 @@ export default function MapPage() {
     const [selectedTime, setSelectedTime] = React.useState<string | undefined>(undefined);
     const [selectedLocationFrom, setSelectedLocationFrom] = React.useState<string | undefined>(undefined);
     const [selectedLocationTo, setSelectedLocationTo] = React.useState<string | undefined>(undefined);
+    const [selectedLocationFromName, setSelectedLocationFromName] = React.useState<string | undefined>(undefined);
+    const [selectedLocationToName, setSelectedLocationToName] = React.useState<string | undefined>(undefined);
 
     const [selectedFromCoord, setSelectedFromCoord] = useState<[number, number] | null>(null)
     const [selectedToCoord, setSelectedToCoord] = useState<[number, number] | null>(null)
     const [routeRequested, setRouteRequested] = useState(false)
-    const [pendingSelection, setPendingSelection] = useState<{ coord: [number, number]; name?: string; bounds?: L.LatLngBounds } | null>(null)
+    const [pendingSelection, setPendingSelection] = useState<{ coord: [number, number]; name?: string; locationId?: string; bounds?: L.LatLngBounds } | null>(null)
     const [pendingRole, setPendingRole] = useState<'from' | 'to' | null>(null)
     const [routeInfo, setRouteInfo] = useState<any | null>(null)
+    const [predictedPrice, setPredictedPrice] = useState<number | null>(null)
+    const [loadingPrice, setLoadingPrice] = useState(false)
 
     useEffect(() => {
         if (!selectedLocationFrom) return
@@ -242,6 +246,66 @@ export default function MapPage() {
         console.log('Ubicación from:', selectedLocationFrom || 'No seleccionada');
         console.log('Ubicación to:', selectedLocationTo || 'No seleccionada');
     };
+
+    const fetchPredictedPrice = async () => {
+        if (!selectedDate || !selectedTime || !selectedLocationFrom || !selectedLocationTo || !routeInfo?.distance) {
+            console.log('Missing data for price prediction', { selectedDate, selectedTime, selectedLocationFrom, selectedLocationTo, distance: routeInfo?.distance });
+            return;
+        }
+
+        // Convertir distancia de metros a millas
+        const distanceInMeters = routeInfo.distance;
+        const distanceInMiles = (distanceInMeters / 1000) / 1.60934; // metros -> km -> millas
+
+        const pickupDateTime = `${selectedDate} ${selectedTime}`;
+        const payload = {
+            pickup_dt_str: pickupDateTime,
+            pulocationid: parseInt(selectedLocationFrom, 10),
+            dolocationid: parseInt(selectedLocationTo, 10),
+            trip_miles: parseFloat(distanceInMiles.toFixed(2))
+        };
+
+        console.log('✅ Fetching predicted price with payload:', payload);
+        setLoadingPrice(true);
+
+        try {
+            const response = await fetch('/api/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => null);
+                console.error('❌ API Error Response:', errorData);
+                throw new Error(`Error ${response.status}: ${errorData?.message || response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('✅ Respuesta recibida:', data);
+            console.log('Estructura completa:', JSON.stringify(data, null, 2));
+
+            const prediction = data.predictions?.[0] || data.prediction || data;
+            console.log('💰 Predicted price:', prediction);
+            setPredictedPrice(prediction);
+
+        } catch (err) {
+            console.error('❌ Error fetching predicted price:', err);
+            setPredictedPrice(null);
+        } finally {
+            setLoadingPrice(false);
+        }
+    };
+
+    // Fetch price when dialog opens and we have all required data including route distance
+    useEffect(() => {
+        if (isConfirmModalOpen && selectedDate && selectedTime && selectedLocationFrom && selectedLocationTo && routeInfo?.distance) {
+            fetchPredictedPrice();
+        }
+    }, [isConfirmModalOpen, selectedDate, selectedTime, selectedLocationFrom, selectedLocationTo, routeInfo]);
 
     useEffect(() => {
         fetch('/data/locations.json')
@@ -304,10 +368,11 @@ export default function MapPage() {
     const handleZoneClick = (feature: any, coord: [number, number], bounds?: L.LatLngBounds, mapRef?: L.Map) => {
         // instead of immediately assigning, set a pending selection and zoom to the zone
         const name = feature?.properties?.zone || feature?.properties?.zone_name || 'Zone'
+        const locationId = feature?.properties?.LocationID || feature?.properties?.location_id || feature?.properties?.OBJECTID
         const role: 'from' | 'to' = !selectedFromCoord ? 'from' : 'to'
-        setPendingSelection({ coord, name, bounds })
+        setPendingSelection({ coord, name, locationId: String(locationId), bounds })
         setPendingRole(role)
-        console.log('Pending selection for', role, name, coord, 'current FROM:', selectedFromCoord, 'TO:', selectedToCoord)
+        console.log('Pending selection for', role, name, 'LocationID:', locationId, 'coord:', coord, 'current FROM:', selectedFromCoord, 'TO:', selectedToCoord)
         // zoom to bounds if available
         try {
             if (bounds && mapRef) mapRef.fitBounds(bounds, { padding: [20, 20] })
@@ -448,14 +513,18 @@ export default function MapPage() {
 
                                             if (effectiveRole === 'from') {
                                                 setSelectedFromCoord(pendingSelection.coord)
+                                                const idToSet = pendingSelection.locationId ?? coordLabel
                                                 const nameToSet = pendingSelection.name ?? coordLabel
-                                                console.log('Setting selectedLocationFrom ->', nameToSet)
-                                                setSelectedLocationFrom(nameToSet)
+                                                console.log('Setting selectedLocationFrom ->', idToSet, '(LocationID)', 'name:', nameToSet)
+                                                setSelectedLocationFrom(idToSet)
+                                                setSelectedLocationFromName(nameToSet)
                                             } else {
                                                 setSelectedToCoord(pendingSelection.coord)
+                                                const idToSet = pendingSelection.locationId ?? coordLabel
                                                 const nameToSet = pendingSelection.name ?? coordLabel
-                                                console.log('Setting selectedLocationTo ->', nameToSet)
-                                                setSelectedLocationTo(nameToSet)
+                                                console.log('Setting selectedLocationTo ->', idToSet, '(LocationID)', 'name:', nameToSet)
+                                                setSelectedLocationTo(idToSet)
+                                                setSelectedLocationToName(nameToSet)
                                             }
 
                                             // clear pending
@@ -515,15 +584,15 @@ export default function MapPage() {
                         <div className="flex justify-between">
 
                             <span className="font-medium">From:</span>
-                            <span>{selectedLocationFrom || 'Not selected'}</span>
+                            <span>{selectedLocationFromName || 'Not selected'}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="font-medium">To:</span>
-                            <span>{selectedLocationTo || 'Not selected'}</span>
+                            <span>{selectedLocationToName || 'Not selected'}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="font-medium">Distance:</span>
-                            <span>{routeInfo ? `${(routeInfo.distance / 1000).toFixed(2)} km` : 'N/A'}</span>
+                            <span>{routeInfo ? `${((routeInfo.distance / 1000) / 1.60934).toFixed(2)} mi` : 'N/A'}</span>
                         </div>
                         <div className="flex justify-between">
                             <span className="font-medium">Time:</span>
@@ -532,7 +601,9 @@ export default function MapPage() {
                     </div>
                     <div className="flex justify-between">
                         <span className="font-medium">Price:</span>
-                        <span>${routeInfo ? 10 : 'N/A'}</span>
+                        <span>
+                            {loadingPrice ? 'Loading...' : (predictedPrice !== null ? `$${predictedPrice.toFixed(2)}` : 'N/A')}
+                        </span>
                     </div>
                     <Button
                         className="w-full"
@@ -541,15 +612,17 @@ export default function MapPage() {
                             console.log('=== Trip Scheduled ===');
                             console.log('Time:', selectedTime);
                             console.log('Date:', selectedDate);
-                            console.log('From:', selectedLocationFrom);
-                            console.log('To:', selectedLocationTo);
-                            console.log('Distance:', routeInfo ? `${(routeInfo.distance / 1000).toFixed(2)} km` : 'N/A');
-                            console.log('Price:', routeInfo ? 10 : 'N/A');
+                            console.log('From:', selectedLocationFromName, '(ID:', selectedLocationFrom, ')');
+                            console.log('To:', selectedLocationToName, '(ID:', selectedLocationTo, ')');
+                            console.log('Distance:', routeInfo ? `${((routeInfo.distance / 1000) / 1.60934).toFixed(2)} mi` : 'N/A');
+                            console.log('Price:', predictedPrice !== null ? `$${predictedPrice.toFixed(2)}` : 'N/A');
                             // Aquí puedes integrar con calendario real (ej: enviar a API de calendario)
                             setIsConfirmModalOpen(false)
                             // Limpiar inputs como antes
                             setSelectedLocationFrom(undefined)
                             setSelectedLocationTo(undefined)
+                            setSelectedLocationFromName(undefined)
+                            setSelectedLocationToName(undefined)
                             setSelectedDate(undefined)
                             setSelectedTime(undefined)
 
@@ -557,10 +630,10 @@ export default function MapPage() {
                                 id: Date.now().toString(),
                                 time: selectedTime || '',
                                 date: selectedDate || '',
-                                distance: routeInfo ? `${(routeInfo.distance / 1000).toFixed(2)} km` : '',
-                                price: routeInfo ? 10 : '',
-                                from: selectedLocationFrom || '',
-                                to: selectedLocationTo || '',
+                                distance: routeInfo ? `${((routeInfo.distance / 1000) / 1.60934).toFixed(2)} mi` : '',
+                                price: predictedPrice !== null ? `${predictedPrice.toFixed(2)}` : '',
+                                from: selectedLocationFromName || '',
+                                to: selectedLocationToName || '',
                             };
                             const storedEvents = JSON.parse(localStorage.getItem('scheduledEvents') || '[]');
                             storedEvents.push(newEvent);
