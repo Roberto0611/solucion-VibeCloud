@@ -28,6 +28,38 @@ const generateMonthlyData = (year: number) => {
     }));
 };
 
+//  "_comment": "Datos de precios promedio mensuales por año y tipo de taxi",
+// "_structure": {
+//    "year": "Año de los datos (número)",
+//   "months": "Array de 12 objetos, uno por cada mes",
+//   "month": "Nombre del mes (3 letras)",
+//   "avgPriceUber": "Precio promedio de Uber en ese mes (número decimal)",
+//   "avgPriceYellowTaxi": "Precio promedio de Yellow Taxi en ese mes (número decimal)"
+//  },
+//  "_instructions": "Cuando tengas datos reales, reemplaza los valores de avgPriceUber y avgPriceYellowTaxi con tus datos de la base de datos. Mantén la estructura de años y meses."
+
+
+{/*// Reemplaza la función generateMonthlyData con:
+const generateMonthlyData = async (year: number) => {
+    try {
+        const response = await fetch('/data/monthly_prices.json');
+        const jsonData = await response.json();
+        const yearData = jsonData.data.find((d: any) => d.year === year);
+        return yearData ? yearData.months : [];
+    } catch (error) {
+        console.error('Error loading monthly data:', error);
+        // Fallback a datos random si falla
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return months.map(month => ({
+            month,
+            year,
+            avgPriceUber: parseFloat((Math.random() * 30 + 15).toFixed(2)),
+            avgPriceYellowTaxi: parseFloat((Math.random() * 25 + 12).toFixed(2))
+        }));
+    }
+};*/}
+
+
 // Custom Tooltip con estilos de Shadcn
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
