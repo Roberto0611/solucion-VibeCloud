@@ -387,10 +387,6 @@ Uber presenta una tarifa significativamente inferior en comparación con el Taxi
 
 ### Equipo VibeCloud
 
-<p align="center">
-  <img src="docs/images/team-photo.png" alt="Equipo VibeCloud" width="600"/>
-</p>
-
 | Rol | Nombre | Contribución | LinkedIn |
 |-----|--------|--------------|----------|
 | **Tech Lead / Backend** | [Roberto Ochoa Cuevas] | Arquitectura AWS, integración SageMaker, APIs, Modelo ML, análisis de datos, infraestructura AWS  | [LinkedIn](www.linkedin.com/in/roberto-ochoa-cuevas-9082a129b) |
