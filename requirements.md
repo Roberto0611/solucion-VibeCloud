@@ -30,3 +30,4 @@ npm install leaflet-routing-machine
 npm install recharts react-is
 
 composer require aws/aws-sdk-php
+composer require google-gemini-php/laravel
