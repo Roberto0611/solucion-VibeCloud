@@ -40,8 +40,6 @@
 - [Características Principales](#-características-principales)
 - [Hallazgos y Análisis](#-hallazgos-y-análisis)
 - [Demo y Casos de Uso](#-demo-y-casos-de-uso)
-- [Instalación y Configuración](#-instalación-y-configuración)
-- [Escalabilidad y Productización](#-escalabilidad-y-productización)
 - [Equipo](#-equipo)
 
 ---
