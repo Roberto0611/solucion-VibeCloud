@@ -27,4 +27,5 @@ Route::get('/getPriceAveragePu/{year}/{month}', [AWSController::class, 'averageP
 
 // Ruta para datos del dashboard
 Route::get('/dashboard-data', [AWSController::class, 'dashboardData'])->name('dashboardData');
+Route::get('/stats-data', [AWSController::class, 'statsData'])->name('statsData');
 Route::get('/test', [AWSController::class, 'test'])->name('test');

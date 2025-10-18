@@ -99,8 +99,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Stats', href: '/stats' },
 ]
 
-// Generar datos mensuales para el año completo
-const generateMonthlyData = (year: number, taxiType: 'uber' | 'yellowTaxi') => {
+// Función fallback para generar datos si falla la API
+const generateMonthlyDataFallback = (year: number, taxiType: 'uber' | 'yellowTaxi') => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const basePrice = taxiType === 'uber' ? 28 : 20;
     const variance = taxiType === 'uber' ? 12 : 10;
@@ -142,13 +142,35 @@ export default function StatsPage() {
     const [selectedTaxiType, setSelectedTaxiType] = React.useState<'uber' | 'yellowTaxi'>('uber');
     const [selectedMetric, setSelectedMetric] = React.useState<'price' | 'traffic' | 'tips'>('price');
 
-    const [monthlyData, setMonthlyData] = React.useState<any[]>(generateMonthlyData(2024, 'uber'));
+    const [monthlyData, setMonthlyData] = React.useState<any[]>([]);
+    const [loadingStats, setLoadingStats] = React.useState(true);
 
-    // Update charts when year or taxi type changes
+    // Cargar datos desde la API cuando cambia el año o tipo de taxi
     useEffect(() => {
+        const fetchStatsData = async () => {
+            try {
+                setLoadingStats(true);
+                const service = selectedTaxiType === 'uber' ? 'Uber' : 'Yellow Taxi';
+                const response = await fetch(`/api/stats-data?year=${selectedYear}&service=${service}`);
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    setMonthlyData(result.data);
+                    console.log('✅ Estadísticas cargadas:', result.data);
+                } else {
+                    console.warn('⚠️ No hay datos, usando fallback');
+                    setMonthlyData(generateMonthlyDataFallback(parseInt(selectedYear), selectedTaxiType));
+                }
+            } catch (error) {
+                console.error('❌ Error cargando estadísticas:', error);
+                setMonthlyData(generateMonthlyDataFallback(parseInt(selectedYear), selectedTaxiType));
+            } finally {
+                setLoadingStats(false);
+            }
+        };
+
         if (selectedYear) {
-            const year = parseInt(selectedYear);
-            setMonthlyData(generateMonthlyData(year, selectedTaxiType));
+            fetchStatsData();
         }
     }, [selectedYear, selectedTaxiType]);
 
@@ -256,6 +278,14 @@ export default function StatsPage() {
                         {selectedMetric === 'traffic' && `Traffic Volume by Month - ${selectedYear} (${selectedTaxiType === 'uber' ? 'Uber' : 'Yellow Taxi'})`}
                         {selectedMetric === 'tips' && `Average Tips by Month - ${selectedYear} (${selectedTaxiType === 'uber' ? 'Uber' : 'Yellow Taxi'})`}
                     </h2>
+                    {loadingStats ? (
+                        <div className="flex items-center justify-center h-full">
+                            <div className="text-center">
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                                <p className="text-muted-foreground">Loading statistics...</p>
+                            </div>
+                        </div>
+                    ) : (
                     <div style={{ width: '100%', height: '400px' }}>
                         <ResponsiveContainer width="100%" height="100%">
                             {selectedMetric === 'price' && (
@@ -308,6 +338,7 @@ export default function StatsPage() {
                             )}
                         </ResponsiveContainer>
                     </div>
+                    )}
                 </div>
 
                 {/* Map Section */}

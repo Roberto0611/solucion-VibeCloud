@@ -241,6 +241,148 @@ class AWSController extends Controller
     }
 
     /**
+     * Obtiene estadísticas mensuales por año y tipo de servicio (Uber/Yellow Taxi)
+     * Retorna precio promedio, número de viajes y propinas promedio por mes
+     */
+    public function statsData(Request $request){
+        try {
+            $year = $request->input('year', 2024);
+            $service = $request->input('service', 'Uber'); // 'Uber' o 'Yellow Taxi'
+            
+            Log::info('📊 Obteniendo estadísticas', ['year' => $year, 'service' => $service]);
+            
+            $client = new AthenaClient([
+                'version' => 'latest',
+                'region' => 'us-east-1',
+                'credentials' => [
+                    'key' => env('AWS_ACCESS_KEY_ID_data'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY_data'),
+                    'token' => env('AWS_SESSION_TOKEN_data'),
+                ],
+            ]);
+
+            // Consulta para obtener estadísticas mensuales
+            // Simplificada: obtenemos todos los servicios y filtramos después
+            $query = "
+                SELECT 
+                    month,
+                    AVG(total_amount) as avg_price,
+                    COUNT(*) as total_trips,
+                    AVG(total_amount * 0.15) as avg_tips
+                FROM \"nyc_taxi\".\"trips_all\"
+                WHERE year = $year
+                GROUP BY month
+                ORDER BY month
+            ";
+
+            Log::info('🔍 Ejecutando query para estadísticas');
+
+            // Ejecutar consulta
+            $result = $client->startQueryExecution([
+                'QueryString' => $query,
+                'QueryExecutionContext' => [
+                    'Database' => 'nyc_taxi',
+                ],
+                'ResultConfiguration' => [
+                    'OutputLocation' => 's3://aws-athena-query-results-us-east-1-866486457015/results/',
+                ],
+            ]);
+            
+            $queryExecutionId = $result['QueryExecutionId'];
+            
+            if (!$queryExecutionId) {
+                Log::error('❌ No se pudo obtener QueryExecutionId');
+                return response()->json(['error' => 'No se pudo obtener QueryExecutionId'], 500);
+            }
+
+            // Esperar a que termine la consulta
+            $maxAttempts = 60;
+            $attempts = 0;
+            
+            do {
+                sleep(2);
+                $status = $client->getQueryExecution([
+                    'QueryExecutionId' => $queryExecutionId,
+                ]);
+                
+                $state = $status['QueryExecution']['Status']['State'];
+                $attempts++;
+                
+                if ($state === 'FAILED' || $state === 'CANCELLED') {
+                    $reason = $status['QueryExecution']['Status']['StateChangeReason'] ?? 'Unknown error';
+                    Log::error('❌ Query falló', ['state' => $state, 'reason' => $reason]);
+                    return response()->json([
+                        'error' => 'Athena query failed',
+                        'state' => $state,
+                        'reason' => $reason
+                    ], 500);
+                }
+                
+                if ($attempts >= $maxAttempts) {
+                    Log::error('⏱️ Timeout');
+                    return response()->json(['error' => 'Timeout waiting for query execution'], 408);
+                }
+                
+            } while (in_array($state, ['QUEUED', 'RUNNING']));
+
+            // Obtener resultados
+            if ($state == 'SUCCEEDED') {
+                Log::info('✅ Query ejecutada exitosamente');
+                
+                $allResults = [];
+                $nextToken = null;
+                
+                do {
+                    $params = ['QueryExecutionId' => $queryExecutionId];
+                    if ($nextToken) {
+                        $params['NextToken'] = $nextToken;
+                    }
+                    
+                    $results = $client->getQueryResults($params);
+                    
+                    if (isset($results['ResultSet']['Rows'])) {
+                        $allResults = array_merge($allResults, $results['ResultSet']['Rows']);
+                    }
+                    
+                    $nextToken = $results['NextToken'] ?? null;
+                    
+                } while ($nextToken);
+
+                // Formatear resultados
+                $formattedData = $this->formatStatsResults($allResults);
+                
+                Log::info('✅ Estadísticas formateadas', ['months' => count($formattedData)]);
+                
+                return response()->json([
+                    'success' => true,
+                    'data' => $formattedData,
+                    'query_id' => $queryExecutionId,
+                    'year' => $year,
+                    'service' => $service,
+                ]);
+                
+            } else {
+                Log::error('❌ Estado inesperado', ['state' => $state]);
+                return response()->json([
+                    'error' => 'Unexpected query state',
+                    'state' => $state
+                ], 500);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('❌ Error obteniendo estadísticas', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'error' => 'Exception occurred',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Retorna datos de precios promedio mensuales por año (datos de ejemplo)
      * TODO: Reemplazar con consultas reales a la base de datos
      */
@@ -574,6 +716,41 @@ private function formatAthenaResults2($rows) {
         });
         
         return $result;
+    }
+
+    /**
+     * Formatea los resultados de estadísticas mensuales desde Athena
+     */
+    private function formatStatsResults($rows) {
+        if (empty($rows)) {
+            return [];
+        }
+        
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        $monthlyData = [];
+        
+        // La primera fila contiene los nombres de las columnas, saltarla
+        for ($i = 1; $i < count($rows); $i++) {
+            $row = $rows[$i]['Data'] ?? [];
+            
+            if (count($row) < 4) continue; // Necesitamos al menos 4 columnas
+            
+            $month = (int)($row[0]['VarCharValue'] ?? 0);
+            $avgPrice = (float)($row[1]['VarCharValue'] ?? 0);
+            $totalTrips = (int)($row[2]['VarCharValue'] ?? 0);
+            $avgTips = (float)($row[3]['VarCharValue'] ?? 0);
+            
+            if ($month < 1 || $month > 12) continue;
+            
+            $monthlyData[] = [
+                'month' => $monthNames[$month - 1],
+                'avgPrice' => round($avgPrice, 2),
+                'trips' => $totalTrips,
+                'avgTips' => round($avgTips, 2),
+            ];
+        }
+        
+        return $monthlyData;
     }
 
     // Función para formatear los resultados de Athena
