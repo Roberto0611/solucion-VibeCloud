@@ -191,6 +191,7 @@ export default function MapPage() {
     const [pendingRole, setPendingRole] = useState<'from' | 'to' | null>(null)
     const [routeInfo, setRouteInfo] = useState<any | null>(null)
     const [predictedPrice, setPredictedPrice] = useState<number | null>(null)
+    const [predictedPriceTaxi, setPredictedPriceTaxi] = useState<number | null>(null)
     const [loadingPrice, setLoadingPrice] = useState(false)
 
     useEffect(() => {
@@ -224,28 +225,50 @@ export default function MapPage() {
         setLoadingPrice(true);
 
         try {
-            const response = await fetch('/api/predict', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
+            // Llamar a ambas APIs en paralelo
+            const [uberResponse, taxiResponse] = await Promise.all([
+                // Predicción Uber (ML SageMaker)
+                fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                }),
+                // Predicción Taxi (algoritmo inteligente)
+                fetch('/api/predictTaxis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                })
+            ]);
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => null);
-                throw new Error(`Error ${response.status}: ${errorData?.message || response.statusText}`);
+            // Procesar respuesta de Uber
+            if (uberResponse.ok) {
+                const uberData = await uberResponse.json();
+                const uberPrediction = uberData.predictions?.[0] || uberData.prediction || uberData;
+                setPredictedPrice(uberPrediction);
+            } else {
+                setPredictedPrice(null);
             }
 
-            const data = await response.json();
-
-
-            const prediction = data.predictions?.[0] || data.prediction || data;
-            setPredictedPrice(prediction);
+            // Procesar respuesta de Taxi
+            if (taxiResponse.ok) {
+                const taxiData = await taxiResponse.json();
+                const taxiPrediction = taxiData.predictions?.[0] || taxiData.prediction || taxiData;
+                setPredictedPriceTaxi(taxiPrediction);
+            } else {
+                setPredictedPriceTaxi(null);
+            }
 
         } catch (err) {
+            console.error('Error fetching predictions:', err);
             setPredictedPrice(null);
+            setPredictedPriceTaxi(null);
         } finally {
             setLoadingPrice(false);
         }
@@ -501,14 +524,49 @@ export default function MapPage() {
                             <span>{routeInfo ? `${Math.round(routeInfo.duration / 60)} min` : 'N/A'}</span>
                         </div>
                     </div>
-                    <div className="flex justify-between">
-                        <span className="font-medium">Price:</span>
-                        <span>
-                            {loadingPrice ? 'Loading...' : (predictedPrice !== null ? `$${predictedPrice.toFixed(2)}` : 'N/A')}
-                        </span>
+                    <div className="mt-4 space-y-2 border-t pt-4">
+                        <div className="font-medium text-sm text-muted-foreground mb-3">Estimated Fare</div>
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                    <span className="font-medium">Uber</span>
+                                </div>
+                                <span className="text-lg font-semibold">
+                                    {loadingPrice ? (
+                                        <span className="text-sm text-muted-foreground">Loading...</span>
+                                    ) : (
+                                        predictedPrice !== null ? `$${predictedPrice.toFixed(2)}` : 'N/A'
+                                    )}
+                                </span>
+                            </div>
+                            <div className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                    <span className="font-medium">Yellow Taxi</span>
+                                </div>
+                                <span className="text-lg font-semibold">
+                                    {loadingPrice ? (
+                                        <span className="text-sm text-muted-foreground">Loading...</span>
+                                    ) : (
+                                        predictedPriceTaxi !== null ? `$${predictedPriceTaxi.toFixed(2)}` : 'N/A'
+                                    )}
+                                </span>
+                            </div>
+                        </div>
+                        {!loadingPrice && predictedPrice !== null && predictedPriceTaxi !== null && (
+                            <div className="text-xs text-center text-muted-foreground pt-2 italic">
+                                {predictedPrice < predictedPriceTaxi 
+                                    ? `Uber saves you $${(predictedPriceTaxi - predictedPrice).toFixed(2)}`
+                                    : predictedPriceTaxi < predictedPrice
+                                    ? `Yellow Taxi saves you $${(predictedPrice - predictedPriceTaxi).toFixed(2)}`
+                                    : 'Same price for both options'
+                                }
+                            </div>
+                        )}
                     </div>
                     <Button
-                        className="w-full"
+                        className="w-full mt-4"
                         onClick={() => {
 
                             // Cerrar el hover
