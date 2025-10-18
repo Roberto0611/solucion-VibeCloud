@@ -4,6 +4,7 @@ use App\Http\Controllers\zonesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AWSController;
+use App\Http\Controllers\GeminiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,6 @@ Route::get('/getPriceAveragePu/{year}/{month}', [AWSController::class, 'averageP
 Route::get('/dashboard-data', [AWSController::class, 'dashboardData'])->name('dashboardData');
 Route::get('/stats-data', [AWSController::class, 'statsData'])->name('statsData');
 Route::get('/test', [AWSController::class, 'test'])->name('test');
+
+// Ruta para Gemini AI
+Route::post('/gemini/query', [GeminiController::class, 'processQuery'])->name('gemini.query');

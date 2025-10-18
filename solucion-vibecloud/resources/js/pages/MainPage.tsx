@@ -25,9 +25,50 @@ const MainPage = () => {
     const [selectedLocationFrom, setSelectedLocationFrom] = React.useState<string | undefined>(undefined);
     const [selectedLocationTo, setSelectedLocationTo] = React.useState<string | undefined>(undefined);
     const [loading, setLoading] = React.useState(false);
+    const [geminiResponse, setGeminiResponse] = React.useState<string>('');
+    const [loadingGemini, setLoadingGemini] = React.useState(false);
 
-    const handleSendQuery = () => {
-        console.log('Query enviado:', query);
+    const handleSendQuery = async () => {
+        if (!query.trim()) {
+            alert('Please enter a query');
+            return;
+        }
+
+        console.log('🤖 Query enviado a Gemini:', query);
+        setLoadingGemini(true);
+        setGeminiResponse('');
+
+        try {
+            const response = await fetch('/api/gemini/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ query }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => null);
+                console.error('❌ Error del servidor:', errorData);
+                throw new Error(`Error ${response.status}: ${errorData?.message || response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('✅ Respuesta de Gemini:', data);
+            
+            if (data.success && data.response) {
+                setGeminiResponse(data.response);
+            } else {
+                setGeminiResponse('No response received from Gemini');
+            }
+
+        } catch (err) {
+            console.error('❌ Error:', err);
+            setGeminiResponse('Error processing your query. Please try again.');
+        } finally {
+            setLoadingGemini(false);
+        }
     };
 
     const handleConfirm = async () => {
@@ -112,18 +153,33 @@ const MainPage = () => {
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
                                     onKeyUp={(e) => {
-                                        if (e.key === 'Enter') {
+                                        if (e.key === 'Enter' && !loadingGemini) {
                                             handleSendQuery();
                                         }
                                     }}
                                     className="flex-1"
-
+                                    disabled={loadingGemini}
                                 />
-                                <Button size="icon" onClick={handleSendQuery}>
-                                    <Send className="h-4 w-4" />
-
+                                <Button 
+                                    size="icon" 
+                                    onClick={handleSendQuery}
+                                    disabled={loadingGemini}
+                                >
+                                    {loadingGemini ? (
+                                        <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+                                    ) : (
+                                        <Send className="h-4 w-4" />
+                                    )}
                                 </Button>
                             </div>
+
+                            {/* Mostrar respuesta de Gemini */}
+                            {geminiResponse && (
+                                <div className="mt-4 p-4 rounded-lg border bg-muted">
+                                    <h3 className="font-semibold text-foreground mb-2">🤖 Gemini Response:</h3>
+                                    <p className="text-sm text-foreground whitespace-pre-wrap">{geminiResponse}</p>
+                                </div>
+                            )}
                         </div>
                     </div>
 
