@@ -126,7 +126,7 @@ export default function Dashboard() {
                 setFunFact(`Today at ${timeStr} from Central Park to Forest Hills will cost $${formattedPrice}`);
             } catch (error) {
                 console.error('Error fetching fun fact:', error);
-                setFunFact('Fun fact: NYC taxis complete over 600,000 trips daily! 🚕');
+                setFunFact('Fun fact: NYC taxis complete over 600,000 trips daily!');
             } finally {
                 setLoadingFact(false);
             }

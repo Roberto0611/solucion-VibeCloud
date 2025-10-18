@@ -198,7 +198,7 @@ export default function StatsPage() {
         const name = feature?.properties?.zone || feature?.properties?.zone_name || 'Zone'
         const borough = feature?.properties?.borough || feature?.properties?.Borough || ''
         const price = feature?.properties?.price || 0;
-        const taxiLabel = taxiType === 'uber' ? '🚗 Uber' : '🚕 Yellow Taxi';
+        const taxiLabel = taxiType === 'uber' ? ' Uber' : ' Yellow Taxi';
         layer.bindPopup(`<strong>${name}</strong><br/>${borough}<br/>${taxiLabel}<br/>Price: $${price}`)
         // listen for clicks on the polygon and stop propagation to the map
         try {
@@ -227,8 +227,8 @@ export default function StatsPage() {
                                     <SelectValue placeholder="Select type" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="uber">🚗 Uber</SelectItem>
-                                    <SelectItem value="yellowTaxi">🚕 Yellow Taxi</SelectItem>
+                                    <SelectItem value="uber"> Uber</SelectItem>
+                                    <SelectItem value="yellowTaxi"> Yellow Taxi</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -240,9 +240,9 @@ export default function StatsPage() {
                                     <SelectValue placeholder="Select metric" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="price">💵 Price</SelectItem>
-                                    <SelectItem value="traffic">🚦 Traffic</SelectItem>
-                                    <SelectItem value="tips">💰 Tips</SelectItem>
+                                    <SelectItem value="price"> Price</SelectItem>
+                                    <SelectItem value="traffic"> Traffic</SelectItem>
+                                    <SelectItem value="tips"> Tips</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -313,7 +313,7 @@ export default function StatsPage() {
                 {/* Map Section */}
                 <div className="rounded-xl border border-sidebar-border/70 bg-background p-6 dark:border-sidebar-border" style={{ height: '400px' }}>
                     <h2 className="text-xl font-bold mb-4 text-center">
-                        {selectedTaxiType === 'uber' ? '🚗 Uber Zone Price Distribution' : '🚕 Yellow Taxi Zone Price Distribution'}
+                        {selectedTaxiType === 'uber' ? ' Uber Zone Price Distribution' : ' Yellow Taxi Zone Price Distribution'}
                     </h2>
                     <div style={{ height: 'calc(100% - 50px)' }}>
                         <MapContainer
@@ -326,7 +326,7 @@ export default function StatsPage() {
                                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                             />
                             <LayersControl position="topright" >
-                                <LayersControl.Overlay checked={selectedTaxiType === 'uber'} name="🚗 Uber Zones">
+                                <LayersControl.Overlay checked={selectedTaxiType === 'uber'} name=" Uber Zones">
                                     <LayerGroup>
                                         {uberZones && selectedTaxiType === 'uber' && (
                                             <GeoJSON
@@ -337,7 +337,7 @@ export default function StatsPage() {
                                         )}
                                     </LayerGroup>
                                 </LayersControl.Overlay>
-                                <LayersControl.Overlay checked={selectedTaxiType === 'yellowTaxi'} name="🚕 Yellow Taxi Zones">
+                                <LayersControl.Overlay checked={selectedTaxiType === 'yellowTaxi'} name=" Yellow Taxi Zones">
                                     <LayerGroup>
                                         {yellowTaxiZones && selectedTaxiType === 'yellowTaxi' && (
                                             <GeoJSON
