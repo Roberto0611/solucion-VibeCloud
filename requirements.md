@@ -27,5 +27,6 @@ npm install @react-three/fiber @react-three/drei three @radix-ui/react-popover c
 npm install -D @types/three
 mpm install proj4
 npm install leaflet-routing-machine
+npm install recharts react-is
 
 composer require aws/aws-sdk-php
