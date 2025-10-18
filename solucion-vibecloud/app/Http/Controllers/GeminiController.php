@@ -28,37 +28,37 @@ class GeminiController extends Controller
             Log::info('🤖 Procesando query con Gemini:', ['query' => $query]);
 
             // Paso 1: Extraer información estructurada con Gemini
-            $systemPrompt = "You are a professional taxi booking assistant specialized in extracting trip information from natural language.
-Your task is to extract the following information from user queries and return it ONLY as a valid JSON object (no other text):
+            $systemPrompt = "Eres un asistente profesional de reserva de taxis especializado en extraer información de viajes del lenguaje natural.
+Tu tarea es extraer la siguiente información de las consultas del usuario y devolverla SOLO como un objeto JSON válido (sin otro texto):
 
 {
-  \"pickup_location\": \"<pickup location name or zone ID if known>\",
-  \"dropoff_location\": \"<dropoff location name or zone ID if known>\",
-  \"pickup_datetime\": \"<datetime in format YYYY-MM-DD HH:MM:SS, infer from relative dates like 'tomorrow'>\",
-  \"trip_distance_estimate\": <estimated distance in miles as a number>,
-  \"pulocationid\": <NYC taxi zone ID for pickup, use 132 for Times Square if not specified>,
-  \"dolocationid\": <NYC taxi zone ID for dropoff, use 132 for JFK Airport if not specified>,
-  \"missing_info\": [\"<list of missing required information>\"],
+  \"pickup_location\": \"<nombre del lugar de recogida o ID de zona si se conoce>\",
+  \"dropoff_location\": \"<nombre del lugar de destino o ID de zona si se conoce>\",
+  \"pickup_datetime\": \"<fecha/hora en formato YYYY-MM-DD HH:MM:SS, inferir de fechas relativas como 'mañana'>\",
+  \"trip_distance_estimate\": <distancia estimada en millas como número>,
+  \"pulocationid\": <ID de zona de taxi de NYC para recogida, usa 132 para Times Square si no se especifica>,
+  \"dolocationid\": <ID de zona de taxi de NYC para destino, usa 132 para JFK Airport si no se especifica>,
+  \"missing_info\": [\"<lista de información requerida faltante>\"],
   \"needs_clarification\": true/false,
-  \"professional_message\": \"<professional, formal message to user about the trip or requesting missing information. Use formal business language without emojis.>\"
+  \"professional_message\": \"<mensaje profesional y formal al usuario sobre el viaje o solicitando información faltante. Usa lenguaje formal de negocios EN ESPAÑOL sin emojis.>\"
 }
 
-Important zone IDs:
+IDs de zona importantes:
 - Times Square: 132
 - JFK Airport: 132
 - LaGuardia Airport: 138
 - Newark Airport: 1
 - Central Park: 43
-- Brooklyn: 35-100 range
-- Manhattan: 1-260 range
+- Brooklyn: rango 35-100
+- Manhattan: rango 1-260
 
-If distance is not specified, estimate based on common NYC distances (Times Square to JFK ≈ 17 miles).
-Current date is October 18, 2025.
-Use professional, formal language without emojis.
-Return ONLY the JSON, no markdown formatting, no explanations.";
+Si no se especifica la distancia, estímala basándote en distancias comunes de NYC (Times Square a JFK ≈ 17 millas).
+La fecha actual es 18 de octubre de 2025.
+Usa lenguaje profesional y formal EN ESPAÑOL sin emojis.
+Devuelve SOLO el JSON, sin formato markdown, sin explicaciones.";
 
             $result = Gemini::generativeModel(model: 'gemini-2.0-flash-exp')
-                ->generateContent($systemPrompt . "\n\nUser query: " . $query);
+                ->generateContent($systemPrompt . "\n\nConsulta del usuario: " . $query);
 
             $geminiResponse = $result->text();
             
@@ -87,7 +87,7 @@ Return ONLY the JSON, no markdown formatting, no explanations.";
             if ($tripData['needs_clarification'] ?? false) {
                 return response()->json([
                     'success' => true,
-                    'response' => $tripData['professional_message'] ?? $tripData['friendly_message'] ?? 'Additional information is required to complete your booking.',
+                    'response' => $tripData['professional_message'] ?? $tripData['friendly_message'] ?? 'Se requiere información adicional para completar su reserva.',
                     'tripData' => $tripData,
                     'needsMoreInfo' => true,
                     'missingInfo' => $tripData['missing_info'] ?? [],
@@ -95,10 +95,10 @@ Return ONLY the JSON, no markdown formatting, no explanations.";
                 ]);
             }
 
-            // Paso 2: Llamar a la función predict() real de AWS SageMaker
-            Log::info('Generating price prediction using AWS SageMaker...');
+            // Paso 2: Llamar a AMBAS funciones de predicción (Uber y Taxi) en paralelo
+            Log::info('🚗 Generando predicciones de precio para Uber y Taxi...');
             
-            // Crear el request con los datos del viaje usando create()
+            // Crear el request con los datos del viaje
             $predictData = [
                 'pickup_dt_str' => $tripData['pickup_datetime'],
                 'pulocationid' => $tripData['pulocationid'],
@@ -106,8 +106,8 @@ Return ONLY the JSON, no markdown formatting, no explanations.";
                 'trip_miles' => $tripData['trip_distance_estimate']
             ];
             
-            // Crear un request con JSON en el contenido
-            $predictRequest = Request::create(
+            // Crear requests para ambas predicciones
+            $uberRequest = Request::create(
                 '/api/predict',
                 'POST',
                 [],
@@ -116,46 +116,109 @@ Return ONLY the JSON, no markdown formatting, no explanations.";
                 ['CONTENT_TYPE' => 'application/json'],
                 json_encode($predictData)
             );
+            
+            $taxiRequest = Request::create(
+                '/api/predictTaxis',
+                'POST',
+                [],
+                [],
+                [],
+                ['CONTENT_TYPE' => 'application/json'],
+                json_encode($predictData)
+            );
 
-            // Llamar directamente al método predict() del AWSController (predicción real de SageMaker)
+            // Llamar directamente a ambos métodos del AWSController
             $awsController = new \App\Http\Controllers\AWSController();
-            $predictResponse = $awsController->predict($predictRequest);
             
-            $prediction = json_decode($predictResponse->getContent(), true);
-            $predictedPrice = $prediction['predictions'][0] ?? null;
+            // Predicción Uber (SageMaker ML)
+            $uberResponse = $awsController->predictWithSageMaker($uberRequest);
+            $uberPrediction = json_decode($uberResponse->getContent(), true);
+            $uberPrice = $uberPrediction['predictions'][0] ?? null;
             
-            if (!$predictedPrice) {
-                Log::error('Failed to obtain price prediction');
+            // Predicción Taxi (Algoritmo inteligente)
+            $taxiResponse = $awsController->predict($taxiRequest);
+            $taxiPrediction = json_decode($taxiResponse->getContent(), true);
+            $taxiPrice = $taxiPrediction['predictions'][0] ?? null;
+            
+            if (!$uberPrice || !$taxiPrice) {
+                Log::error('❌ Failed to obtain price predictions');
                 return response()->json([
                     'success' => true,
-                    'response' => ($tripData['professional_message'] ?? $tripData['friendly_message'] ?? 'Trip information received.') . "\n\nWe are unable to provide a price estimate at this time. Please try again later.",
+                    'response' => ($tripData['professional_message'] ?? $tripData['friendly_message'] ?? 'Información del viaje recibida.') . "\n\nNo pudimos proporcionar una estimación de precio en este momento. Por favor, inténtelo de nuevo más tarde.",
                     'tripData' => $tripData,
                     'originalQuery' => $query
                 ]);
             }
 
-            Log::info('Price prediction obtained:', ['price' => $predictedPrice]);
+            Log::info('✅ Predicciones obtenidas:', ['uber' => $uberPrice, 'taxi' => $taxiPrice]);
 
-            // Paso 3: Generar respuesta final profesional con el precio
-            $professionalMsg = $tripData['professional_message'] ?? $tripData['friendly_message'] ?? 'Your trip has been processed.';
+            // Paso 3: Generar análisis comparativo con Gemini
+            $analysisPrompt = "Eres un analista profesional de transporte. Analiza estas dos opciones de tarifas y proporciona una recomendación breve y profesional EN ESPAÑOL.
+
+Detalles del Viaje:
+- Desde: {$tripData['pickup_location']}
+- Hasta: {$tripData['dropoff_location']}
+- Distancia: {$tripData['trip_distance_estimate']} millas
+- Fecha/Hora: {$tripData['pickup_datetime']}
+
+Opciones de Tarifa:
+- Uber: \${$uberPrice}
+- Taxi Amarillo: \${$taxiPrice}
+
+Proporciona un análisis conciso (2-3 oraciones) en ESPAÑOL explicando:
+1. Qué opción ofrece mejor valor
+2. La diferencia de precio
+3. Una recomendación profesional
+
+Usa lenguaje formal y profesional EN ESPAÑOL. Sin emojis. Sé conciso y directo.";
+
+            $analysisResult = Gemini::generativeModel(model: 'gemini-2.0-flash-exp')
+                ->generateContent($analysisPrompt);
+
+            $analysis = trim($analysisResult->text());
+            
+            Log::info('📊 Análisis generado:', ['analysis' => $analysis]);
+
+            // Paso 4: Generar respuesta final profesional con ambos precios y análisis
+            $professionalMsg = $tripData['professional_message'] ?? $tripData['friendly_message'] ?? 'Su viaje ha sido procesado.';
             
             $finalMessage = $professionalMsg . "\n\n";
-            $finalMessage .= "TRIP SUMMARY\n";
+            $finalMessage .= "RESUMEN DEL VIAJE\n";
             $finalMessage .= "────────────────────────────────\n";
-            $finalMessage .= "Estimated Fare: $" . number_format($predictedPrice, 2) . "\n";
-            $finalMessage .= "Pickup: " . $tripData['pickup_location'] . "\n";
-            $finalMessage .= "Destination: " . $tripData['dropoff_location'] . "\n";
-            $finalMessage .= "Scheduled: " . $tripData['pickup_datetime'] . "\n";
-            $finalMessage .= "Distance: Approximately " . $tripData['trip_distance_estimate'] . " miles";
+            $finalMessage .= "Origen: " . $tripData['pickup_location'] . "\n";
+            $finalMessage .= "Destino: " . $tripData['dropoff_location'] . "\n";
+            $finalMessage .= "Programado: " . $tripData['pickup_datetime'] . "\n";
+            $finalMessage .= "Distancia: Aproximadamente " . $tripData['trip_distance_estimate'] . " millas\n\n";
+            
+            $finalMessage .= "COMPARACIÓN DE TARIFAS\n";
+            $finalMessage .= "────────────────────────────────\n";
+            $finalMessage .= "Uber:         $" . number_format($uberPrice, 2) . "\n";
+            $finalMessage .= "Taxi Amarillo: $" . number_format($taxiPrice, 2) . "\n";
+            
+            // Mostrar diferencia
+            $difference = abs($uberPrice - $taxiPrice);
+            $cheaper = $uberPrice < $taxiPrice ? 'Uber' : 'Taxi Amarillo';
+            $finalMessage .= "\nAhorro:       $" . number_format($difference, 2) . " con {$cheaper}\n\n";
+            
+            $finalMessage .= "ANÁLISIS\n";
+            $finalMessage .= "────────────────────────────────\n";
+            $finalMessage .= $analysis;
 
             return response()->json([
                 'success' => true,
                 'response' => $finalMessage,
                 'tripData' => $tripData,
-                'prediction' => [
-                    'price' => $predictedPrice,
-                    'input' => $prediction['input_data'] ?? null
+                'predictions' => [
+                    'uber' => [
+                        'price' => $uberPrice,
+                        'metadata' => $uberPrediction['metadata'] ?? null
+                    ],
+                    'taxi' => [
+                        'price' => $taxiPrice,
+                        'metadata' => $taxiPrediction['metadata'] ?? null
+                    ]
                 ],
+                'analysis' => $analysis,
                 'originalQuery' => $query
             ]);
 
