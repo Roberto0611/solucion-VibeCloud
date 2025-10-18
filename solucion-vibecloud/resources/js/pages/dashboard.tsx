@@ -17,47 +17,16 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-// Datos random para la gráfica (luego los reemplazarás con datos reales)
-const generateMonthlyData = (year: number) => {
+// Función fallback para generar datos si la API falla
+const generateMonthlyDataFallback = (year: number) => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months.map(month => ({
         month,
         year,
-        avgPriceUber: parseFloat((Math.random() * 30 + 15).toFixed(2)), // Precio Uber entre $15 y $45
-        avgPriceYellowTaxi: parseFloat((Math.random() * 25 + 12).toFixed(2)) // Precio Yellow Taxi entre $12 y $37
+        avgPriceUber: parseFloat((Math.random() * 30 + 15).toFixed(2)),
+        avgPriceYellowTaxi: parseFloat((Math.random() * 25 + 12).toFixed(2))
     }));
 };
-
-//  "_comment": "Datos de precios promedio mensuales por año y tipo de taxi",
-// "_structure": {
-//    "year": "Año de los datos (número)",
-//   "months": "Array de 12 objetos, uno por cada mes",
-//   "month": "Nombre del mes (3 letras)",
-//   "avgPriceUber": "Precio promedio de Uber en ese mes (número decimal)",
-//   "avgPriceYellowTaxi": "Precio promedio de Yellow Taxi en ese mes (número decimal)"
-//  },
-//  "_instructions": "Cuando tengas datos reales, reemplaza los valores de avgPriceUber y avgPriceYellowTaxi con tus datos de la base de datos. Mantén la estructura de años y meses."
-
-
-{/*// Reemplaza la función generateMonthlyData con:
-const generateMonthlyData = async (year: number) => {
-    try {
-        const response = await fetch('/data/monthly_prices.json');
-        const jsonData = await response.json();
-        const yearData = jsonData.data.find((d: any) => d.year === year);
-        return yearData ? yearData.months : [];
-    } catch (error) {
-        console.error('Error loading monthly data:', error);
-        // Fallback a datos random si falla
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        return months.map(month => ({
-            month,
-            year,
-            avgPriceUber: parseFloat((Math.random() * 30 + 15).toFixed(2)),
-            avgPriceYellowTaxi: parseFloat((Math.random() * 25 + 12).toFixed(2))
-        }));
-    }
-};*/}
 
 
 // Custom Tooltip con estilos de Shadcn
@@ -65,7 +34,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
             <div className="rounded-lg border bg-background p-3 shadow-md">
-                <p className="font-semibold text-foreground mb-2">{`${label} ${payload[0]?.payload?.year}`}</p>
+                <p className="font-semibold text-foreground mb-2">{label}</p>
                 {payload.map((entry: any, index: number) => (
                     <p key={index} className="text-sm" style={{ color: entry.color }}>
                         {`${entry.name}: $${entry.value}`}
@@ -83,9 +52,38 @@ export default function Dashboard() {
     const [loadingFact, setLoadingFact] = useState(true);
     const [chartData, setChartData] = useState<any[]>([]);
     const [currentYear, setCurrentYear] = useState(2019);
+    const [allYearsData, setAllYearsData] = useState<any[]>([]); // Datos de todos los años desde la API
+    const [loadingData, setLoadingData] = useState(true);
 
     const { auth } = usePage().props as any;
     const userName = auth?.user?.name ?? auth?.user?.first_name ?? 'Usuario';
+
+    // Cargar datos del dashboard desde la API
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                setLoadingData(true);
+                const response = await fetch('/api/dashboard-data');
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    setAllYearsData(result.data);
+                    console.log('✅ Datos del dashboard cargados:', result.data);
+                } else {
+                    console.error('❌ Error en la respuesta:', result);
+                    // Usar datos de fallback
+                    setAllYearsData([]);
+                }
+            } catch (error) {
+                console.error('❌ Error cargando datos del dashboard:', error);
+                setAllYearsData([]);
+            } finally {
+                setLoadingData(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, []);
 
     // Fetch predicción para el fun fact
     useEffect(() => {
@@ -137,13 +135,25 @@ export default function Dashboard() {
 
     // Animación de la gráfica - cambia de año cada 3 segundos
     useEffect(() => {
+        if (loadingData || allYearsData.length === 0) return;
+
         const years = [2019, 2020, 2021, 2022, 2023, 2024];
         let yearIndex = 0;
 
         const updateChart = () => {
             const year = years[yearIndex];
             setCurrentYear(year);
-            setChartData(generateMonthlyData(year));
+            
+            // Buscar datos del año desde la API
+            const yearData = allYearsData.find(d => d.year === year);
+            if (yearData && yearData.months) {
+                setChartData(yearData.months);
+            } else {
+                // Fallback a datos random si no hay datos para ese año
+                console.warn(`⚠️ No hay datos para el año ${year}, usando fallback`);
+                setChartData(generateMonthlyDataFallback(year));
+            }
+            
             yearIndex = (yearIndex + 1) % years.length;
         };
 
@@ -151,7 +161,7 @@ export default function Dashboard() {
         const interval = setInterval(updateChart, 3000); // Cambia cada 3 segundos
 
         return () => clearInterval(interval);
-    }, []);
+    }, [allYearsData, loadingData]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -201,6 +211,14 @@ export default function Dashboard() {
                                 For more information, check stats
                             </Link>
                         </h2>
+                        {loadingData ? (
+                            <div className="flex items-center justify-center h-full">
+                                <div className="text-center">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                                    <p className="text-muted-foreground">Loading chart data...</p>
+                                </div>
+                            </div>
+                        ) : (
                         <div style={{ width: '100%', height: '450px' }}>
                             <ResponsiveContainer>
                                 <LineChart
@@ -249,6 +267,7 @@ export default function Dashboard() {
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -24,3 +24,7 @@ Route::get('/getZones/{id}', [zonesController::class, 'getZoneById'])->name('get
 // rutas para obtener datos historicos
 Route::get('/getPriceAverageDo/{year}/{month}', [AWSController::class, 'averagePerZoneDoLocation'])->name('getHistoricalDataDo');
 Route::get('/getPriceAveragePu/{year}/{month}', [AWSController::class, 'averagePerZonePuLocation'])->name('getHistoricalDataPu');
+
+// Ruta para datos del dashboard
+Route::get('/dashboard-data', [AWSController::class, 'dashboardData'])->name('dashboardData');
+Route::get('/test', [AWSController::class, 'test'])->name('test');
