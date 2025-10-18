@@ -11,6 +11,7 @@ npm install -D @types/leaflet
 npm install @react-three/fiber @react-three/drei three
 npm install motion
 npm install framer-motion
+npm install recharts
 
 npm install
 

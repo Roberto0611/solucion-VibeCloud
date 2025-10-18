@@ -25,9 +25,10 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 import ResponsiveYear from './Responsive/ResponsiveYear.tsx/ResponsiveYear'
-import ResponsiveMonth from './Responsive/ResponsiveMonth/ResponsiveMonth'
 interface LocationData {
     lat: number
     lon: number
@@ -55,7 +56,7 @@ function transformCoordsRecursively(coords: any, isProjected: boolean): any {
     return coords.map((c: any) => transformCoordsRecursively(c, isProjected))
 }
 
-function normalizeGeoJSON(gj: any): any {
+function normalizeGeoJSON(gj: any, taxiType: 'uber' | 'yellowTaxi'): any {
     if (!gj || !gj.features || !Array.isArray(gj.features)) return gj
 
     // try to detect if coordinates look projected (very large numbers)
@@ -81,11 +82,14 @@ function normalizeGeoJSON(gj: any): any {
 
     // transform all features
     const newGj = JSON.parse(JSON.stringify(gj))
+    const basePrice = taxiType === 'uber' ? 35 : 25;
+    const variance = taxiType === 'uber' ? 25 : 20;
+
     newGj.features = newGj.features.map((f: any) => {
         if (!f.geometry || !f.geometry.coordinates) return f
         f.geometry.coordinates = transformCoordsRecursively(f.geometry.coordinates, true)
-        // Asignar precio dummy
-        f.properties.price = Math.floor(Math.random() * 100) + 1;
+        // Asignar precio según tipo de taxi
+        f.properties.price = Math.floor(Math.random() * variance + basePrice);
         return f;
     })
     return newGj
@@ -95,13 +99,58 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Stats', href: '/stats' },
 ]
 
+// Generar datos mensuales para el año completo
+const generateMonthlyData = (year: number, taxiType: 'uber' | 'yellowTaxi') => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const basePrice = taxiType === 'uber' ? 28 : 20;
+    const variance = taxiType === 'uber' ? 12 : 10;
+    const baseTips = taxiType === 'uber' ? 5 : 3;
+    const tipsVariance = taxiType === 'uber' ? 3 : 2;
+
+    return months.map((month, index) => ({
+        month,
+        avgPrice: parseFloat((Math.random() * variance + basePrice).toFixed(2)),
+        trips: Math.floor(Math.random() * 50000 + 20000),
+        avgTips: parseFloat((Math.random() * tipsVariance + baseTips).toFixed(2))
+    }));
+};
+
+// Custom Tooltip con estilos de Shadcn
+const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="rounded-lg border bg-background p-3 shadow-md">
+                <p className="font-semibold text-foreground mb-2">{label}</p>
+                {payload.map((entry: any, index: number) => (
+                    <p key={index} className="text-sm" style={{ color: entry.color }}>
+                        {`${entry.name}: ${entry.dataKey === 'avgPrice' || entry.dataKey === 'avgTips' ? '$' + entry.value : entry.value.toLocaleString()}`}
+                    </p>
+                ))}
+            </div>
+        );
+    }
+    return null;
+};
+
 export default function StatsPage() {
 
     const [locations, setLocations] = useState<LocationData[]>([])
-    const [zones, setZones] = useState<any>(null)
+    const [uberZones, setUberZones] = useState<any>(null)
+    const [yellowTaxiZones, setYellowTaxiZones] = useState<any>(null)
 
-    const [selectedYear, setSelectedYear] = React.useState<string | undefined>(undefined); // Cambiar a selectedYear
-    const [selectedMonth, setSelectedMonth] = React.useState<string | undefined>(undefined);
+    const [selectedYear, setSelectedYear] = React.useState<string>('2024'); // Default 2024
+    const [selectedTaxiType, setSelectedTaxiType] = React.useState<'uber' | 'yellowTaxi'>('uber');
+    const [selectedMetric, setSelectedMetric] = React.useState<'price' | 'traffic' | 'tips'>('price');
+
+    const [monthlyData, setMonthlyData] = React.useState<any[]>(generateMonthlyData(2024, 'uber'));
+
+    // Update charts when year or taxi type changes
+    useEffect(() => {
+        if (selectedYear) {
+            const year = parseInt(selectedYear);
+            setMonthlyData(generateMonthlyData(year, selectedTaxiType));
+        }
+    }, [selectedYear, selectedTaxiType]);
 
     useEffect(() => {
         fetch('/data/locations.json')
@@ -113,29 +162,44 @@ export default function StatsPage() {
         fetch('/data/taxi_zones.json')
             .then(r => r.json())
             .then((gj) => {
-                const normalized = normalizeGeoJSON(gj)
-                setZones(normalized)
+                const normalizedUber = normalizeGeoJSON(gj, 'uber')
+                const normalizedYellowTaxi = normalizeGeoJSON(gj, 'yellowTaxi')
+                setUberZones(normalizedUber)
+                setYellowTaxiZones(normalizedYellowTaxi)
             })
             .catch(err => console.error('Error cargando taxi_zones.json:', err))
     }, [])
 
-    const zoneStyle = (feature: any) => {
+    const zoneStyle = (feature: any, taxiType: 'uber' | 'yellowTaxi') => {
         const price = feature?.properties?.price || 0;
-        let color = 'green'; // Bajo precio
-        if (price > 50) color = 'yellow';
-        if (price > 75) color = 'red'; // Alto precio
+        let color = taxiType === 'uber' ? '#10b981' : '#ffc658'; // Base color (verde para Uber, amarillo para Yellow Taxi)
+
+        // Ajustar intensidad según precio con sistema de semáforo
+        if (taxiType === 'uber') {
+            if (price <= 40) color = '#10b981'; // Verde - Precio bajo
+            else if (price > 40 && price <= 50) color = '#fbbf24'; // Amarillo - Precio medio
+            else if (price > 50) color = '#ef4444'; // Rojo - Precio alto
+        } else {
+            if (price <= 30) color = '#10b981'; // Verde - Precio bajo
+            else if (price > 30 && price <= 40) color = '#fbbf24'; // Amarillo - Precio medio
+            else if (price > 40) color = '#ef4444'; // Rojo - Precio alto
+        }
+
         return {
             color,
-            weight: 1,
-            fillOpacity: 0.25
+            weight: 2,
+            fillOpacity: 0.5
         }
     }
 
-    const onEachZone = (feature: any, layer: L.Layer) => {
+
+
+    const onEachZone = (feature: any, layer: L.Layer, taxiType: 'uber' | 'yellowTaxi') => {
         const name = feature?.properties?.zone || feature?.properties?.zone_name || 'Zone'
         const borough = feature?.properties?.borough || feature?.properties?.Borough || ''
         const price = feature?.properties?.price || 0;
-        layer.bindPopup(`<strong>${name}</strong><br/>${borough}<br/>Precio: $${price}`)
+        const taxiLabel = taxiType === 'uber' ? '🚗 Uber' : '🚕 Yellow Taxi';
+        layer.bindPopup(`<strong>${name}</strong><br/>${borough}<br/>${taxiLabel}<br/>Price: $${price}`)
         // listen for clicks on the polygon and stop propagation to the map
         try {
             ; (layer as any).on('click', (e: any) => {
@@ -148,26 +212,110 @@ export default function StatsPage() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Map" />
-            <ResizablePanelGroup direction="horizontal" style={{ height: "100%" }}>
-                <ResizablePanel defaultSize={29}>
-                    <div style={{ padding: "20px", height: "100%" }} className='bg-background'>
-                        <h1 style={{ fontSize: "20px", fontWeight: "bold" }} className='text-center'>StatisticsCloud</h1>
-                        <br />
-                        <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4">
-                            <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4">
-                                <ResponsiveYear onYearChange={setSelectedYear} value={selectedYear} /> {/* Cambiar onLocationChange por onYearChange, y selectedDate por selectedYear */}
-                                <ResponsiveMonth onMonthChange={setSelectedMonth} value={selectedMonth} />
-                            </div>
-                            <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-4 pt-6">
-                                <Button className="mt-4 md:mt-0" size="sm">Confirm</Button>
-                            </div>
+            <Head title="Stats" />
+            <div className="flex h-full flex-1 flex-col gap-4 p-4">
+                {/* Controls Section */}
+                <div className="rounded-xl border border-sidebar-border/70 bg-background p-6 dark:border-sidebar-border">
+                    <h1 className="text-2xl font-bold text-center mb-4">Statistics Dashboard</h1>
+                    <div className="flex flex-wrap justify-center items-center gap-4">
+                        <ResponsiveYear onYearChange={setSelectedYear} value={selectedYear} />
+
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium">Taxi Type</label>
+                            <Select value={selectedTaxiType} onValueChange={(value: 'uber' | 'yellowTaxi') => setSelectedTaxiType(value)}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="uber">🚗 Uber</SelectItem>
+                                    <SelectItem value="yellowTaxi">🚕 Yellow Taxi</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium">Metric</label>
+                            <Select value={selectedMetric} onValueChange={(value: 'price' | 'traffic' | 'tips') => setSelectedMetric(value)}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Select metric" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="price">💵 Price</SelectItem>
+                                    <SelectItem value="traffic">🚦 Traffic</SelectItem>
+                                    <SelectItem value="tips">💰 Tips</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
-                </ResizablePanel>
-                <ResizableHandle withHandle />
-                <ResizablePanel defaultSize={71}>
-                    <div style={{ position: "relative", height: "100%", width: "100%" }}>
+                </div>
+
+                {/* Chart Section */}
+                <div className="flex-1 rounded-xl border border-sidebar-border/70 bg-background p-6 dark:border-sidebar-border" style={{ minHeight: '500px' }}>
+                    <h2 className="text-xl font-bold mb-4 text-center">
+                        {selectedMetric === 'price' && `Average Price by Month - ${selectedYear} (${selectedTaxiType === 'uber' ? 'Uber' : 'Yellow Taxi'})`}
+                        {selectedMetric === 'traffic' && `Traffic Volume by Month - ${selectedYear} (${selectedTaxiType === 'uber' ? 'Uber' : 'Yellow Taxi'})`}
+                        {selectedMetric === 'tips' && `Average Tips by Month - ${selectedYear} (${selectedTaxiType === 'uber' ? 'Uber' : 'Yellow Taxi'})`}
+                    </h2>
+                    <div style={{ width: '100%', height: '400px' }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            {selectedMetric === 'price' && (
+                                <LineChart data={monthlyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="month" />
+                                    <YAxis label={{ value: 'Price ($)', angle: -90, position: 'insideLeft' }} />
+                                    <Tooltip content={<CustomTooltip />} />
+                                    <Legend />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="avgPrice"
+                                        stroke={selectedTaxiType === 'uber' ? '#10b981' : '#ffc658'}
+                                        strokeWidth={3}
+                                        name="Avg Price"
+                                        dot={{ r: 5 }}
+                                    />
+                                </LineChart>
+                            )}
+                            {selectedMetric === 'traffic' && (
+                                <BarChart data={monthlyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="month" />
+                                    <YAxis label={{ value: 'Trips', angle: -90, position: 'insideLeft' }} />
+                                    <Tooltip content={<CustomTooltip />} />
+                                    <Legend />
+                                    <Bar
+                                        dataKey="trips"
+                                        fill={selectedTaxiType === 'uber' ? '#10b981' : '#ffc658'}
+                                        name="Total Trips"
+                                    />
+                                </BarChart>
+                            )}
+                            {selectedMetric === 'tips' && (
+                                <LineChart data={monthlyData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="month" />
+                                    <YAxis label={{ value: 'Tips ($)', angle: -90, position: 'insideLeft' }} />
+                                    <Tooltip content={<CustomTooltip />} />
+                                    <Legend />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="avgTips"
+                                        stroke={selectedTaxiType === 'uber' ? '#10b981' : '#ffc658'}
+                                        strokeWidth={3}
+                                        name="Avg Tips"
+                                        dot={{ r: 5 }}
+                                    />
+                                </LineChart>
+                            )}
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Map Section */}
+                <div className="rounded-xl border border-sidebar-border/70 bg-background p-6 dark:border-sidebar-border" style={{ height: '400px' }}>
+                    <h2 className="text-xl font-bold mb-4 text-center">
+                        {selectedTaxiType === 'uber' ? '🚗 Uber Zone Price Distribution' : '🚕 Yellow Taxi Zone Price Distribution'}
+                    </h2>
+                    <div style={{ height: 'calc(100% - 50px)' }}>
                         <MapContainer
                             center={[40.7128, -74.0060]}
                             zoom={11}
@@ -178,22 +326,33 @@ export default function StatsPage() {
                                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                             />
                             <LayersControl position="topright" >
-
-                                <LayersControl.Overlay checked name="Taxi Zones (GeoJSON)">
+                                <LayersControl.Overlay checked={selectedTaxiType === 'uber'} name="🚗 Uber Zones">
                                     <LayerGroup>
-                                        {zones && (
-                                            <>
-                                                <GeoJSON data={zones} style={zoneStyle} onEachFeature={(f, layer) => onEachZone(f, layer)} />
-                                            </>
+                                        {uberZones && selectedTaxiType === 'uber' && (
+                                            <GeoJSON
+                                                data={uberZones}
+                                                style={(feature) => zoneStyle(feature, 'uber')}
+                                                onEachFeature={(f, layer) => onEachZone(f, layer, 'uber')}
+                                            />
                                         )}
-                                        {!zones && <div style={{ padding: 8, color: '#fff' }}>Cargando polígonos...</div>}
+                                    </LayerGroup>
+                                </LayersControl.Overlay>
+                                <LayersControl.Overlay checked={selectedTaxiType === 'yellowTaxi'} name="🚕 Yellow Taxi Zones">
+                                    <LayerGroup>
+                                        {yellowTaxiZones && selectedTaxiType === 'yellowTaxi' && (
+                                            <GeoJSON
+                                                data={yellowTaxiZones}
+                                                style={(feature) => zoneStyle(feature, 'yellowTaxi')}
+                                                onEachFeature={(f, layer) => onEachZone(f, layer, 'yellowTaxi')}
+                                            />
+                                        )}
                                     </LayerGroup>
                                 </LayersControl.Overlay>
                             </LayersControl>
                         </MapContainer>
                     </div>
-                </ResizablePanel>
-            </ResizablePanelGroup>
+                </div>
+            </div>
         </AppLayout>
     )
 }
