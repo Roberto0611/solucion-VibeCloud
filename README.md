@@ -25,6 +25,7 @@
 
 [![Ver Demo en Drive](docs/images/video-thumbnail.png)](https://drive.google.com/file/d/1XX1fn3gQZVqiUaPZjS2jOJwskFvX26Gn/view?usp=sharing)
 
+[link del video](https://drive.google.com/file/d/1XX1fn3gQZVqiUaPZjS2jOJwskFvX26Gn/view?usp=sharing)
 **Duración:** 13:24 minutos | **Idioma:** Español
 
 > 💡 **Nota:** El video incluye demostración en vivo de todas las funcionalidades, arquitectura AWS y casos de uso reales.
@@ -430,7 +431,7 @@ of this software and associated documentation files...
 
 ```
 📁 Archivos:         450+
-☕ Commits:          81
+☕ Commits:          85
 ⏰ Horas de trabajo: 40+ 
 📊 Dataset size:     300gb en parquet
 🚀 developing time:  7 dias
